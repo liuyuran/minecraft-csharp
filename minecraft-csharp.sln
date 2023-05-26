@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "minecraft-server", "minecraft-server\minecraft-server.csproj", "{4345681D-53BF-4EF2-83F4-EC1A857DB193}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "minecraft-base", "minecraft-base\minecraft-base.csproj", "{0E0A77BD-9C30-4C78-8A1F-96F96DE9A567}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4345681D-53BF-4EF2-83F4-EC1A857DB193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4345681D-53BF-4EF2-83F4-EC1A857DB193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4345681D-53BF-4EF2-83F4-EC1A857DB193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4345681D-53BF-4EF2-83F4-EC1A857DB193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E0A77BD-9C30-4C78-8A1F-96F96DE9A567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E0A77BD-9C30-4C78-8A1F-96F96DE9A567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E0A77BD-9C30-4C78-8A1F-96F96DE9A567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E0A77BD-9C30-4C78-8A1F-96F96DE9A567}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
