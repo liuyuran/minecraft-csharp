@@ -1,0 +1,3 @@
+[submodule "minecraft-unity"]
+	path = minecraft-unity
+	url = https://github.com/liuyuran/minecraft-unity
