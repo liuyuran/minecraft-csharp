@@ -1,5 +1,5 @@
 namespace Base.System {
-    public class System: ISystem {
-        
+    public abstract class System: ISystem {
+        public abstract void Update(World world);
     }
 }

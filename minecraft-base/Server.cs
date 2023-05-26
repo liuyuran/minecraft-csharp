@@ -5,9 +5,11 @@ namespace Base {
     /// 服务器主类，可是该怎么写呢？
     /// </summary>
     public class Server {
-        private void Update() {}
+        private void Update() {
+            //
+        }
         
-        public void Start() {
+        public void Start(bool isLocal) {
             while (true) {
                 Thread.Sleep(1);
                 Update();
