@@ -3,12 +3,13 @@ using System.Threading;
 using Base.Manager;
 
 namespace Base {
-    public class Game {
+    public static class Game {
         public static void Start(string path) {
             // 扫描存档，如果存档存在，读取，如果不存在，初始化
             ArchiveManager.LoadArchive(path);
             // 初始化系统
             SystemManager.Initialize();
+            // 开始游戏循环
             var prev = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             while (true) {
                 // 确保最高100ms一次的刷新频率
@@ -17,7 +18,6 @@ namespace Base {
                     Thread.Sleep(10);
                     continue;
                 }
-                // 开始游戏循环
                 SystemManager.Update();
             }
             // ReSharper disable once FunctionNeverReturns
