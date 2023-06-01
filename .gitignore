@@ -67,3 +67,4 @@ minecraft-base/obj/
 minecraft-server/obj/
 minecraft-server/bin/
 minecraft-base/bin/
+*.meta
