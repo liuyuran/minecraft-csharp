@@ -8,4 +8,24 @@
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Remove="Base\Interface\IComponentData.cs.meta" />
+      <None Remove="Base\Interface\ISystem.cs.meta" />
+      <None Remove="Base\ArchiveManager.cs.meta" />
+      <None Remove="Base\Entity.cs.meta" />
+      <None Remove="Base\EntityManager.cs.meta" />
+      <None Remove="Base\SystemManager.cs.meta" />
+      <None Remove="Base\Interface.meta" />
+      <None Remove="Base.meta" />
+      <None Remove="bin.meta" />
+      <None Remove="Components.meta" />
+      <None Remove="Game.cs.meta" />
+      <None Remove="minecraft-base.csproj.meta" />
+      <None Remove="package.json.meta" />
+      <None Remove="Systems.meta" />
+      <None Remove="Components\Player.cs.meta" />
+      <None Remove="Systems\ChunkGenerateSystem.cs.meta" />
+      <None Remove="obj.meta" />
+    </ItemGroup>
+
 </Project>

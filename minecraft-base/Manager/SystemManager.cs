@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Base.Base.Interface;
+using Base.Interface;
 using Base.Systems;
 
-namespace Base.Base {
+namespace Base.Manager {
     /// <summary>
     /// 系统管理器，用来从代码层面注册并启动各类系统
     /// </summary>
@@ -11,6 +11,8 @@ namespace Base.Base {
         
         public static void Initialize() {
             RegisterSystem(new ChunkGenerateSystem());
+            RegisterSystem(new CheckDeadSystem());
+            RegisterSystem(new CommandApplySystem());
         }
 
         private static void RegisterSystem(ISystem system) {

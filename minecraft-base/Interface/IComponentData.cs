@@ -1,4 +1,4 @@
-﻿namespace Base.Base.Interface {
+﻿namespace Base.Interface {
     
     public interface IComponentData {
         

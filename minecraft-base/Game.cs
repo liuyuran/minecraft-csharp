@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Base.Base;
+using Base.Manager;
 
 namespace Base {
     public class Game {

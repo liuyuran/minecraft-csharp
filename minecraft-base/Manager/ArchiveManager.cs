@@ -1,4 +1,4 @@
-﻿namespace Base.Base {
+﻿namespace Base.Manager {
     /// <summary>
     /// 存档管理器
     /// </summary>

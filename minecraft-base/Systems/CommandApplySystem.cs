@@ -2,15 +2,15 @@
 
 namespace Base.Systems {
     /// <summary>
-    /// 区块生成系统
+    /// 客户端指令读取系统，前后端交互核心
     /// </summary>
-    public class ChunkGenerateSystem: ISystem {
+    public class CommandApplySystem: ISystem {
         public void OnCreate() {
             //
         }
 
         public void OnUpdate() {
-            throw new System.NotImplementedException();
+            //
         }
     }
 }

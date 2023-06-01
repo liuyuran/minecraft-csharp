@@ -1,5 +1,4 @@
-﻿using Base.Base;
-using Base.Base.Interface;
+﻿using Base.Interface;
 
 namespace Base.Components {
     /// <summary>

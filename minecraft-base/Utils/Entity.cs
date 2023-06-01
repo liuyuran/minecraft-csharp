@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Base.Base.Interface;
+using Base.Interface;
 
-namespace Base.Base {
+namespace Base.Utils {
     /// <summary>
     /// 实体，除了ID什么都不存，就是一个组合主体
     /// </summary>
@@ -12,6 +12,12 @@ namespace Base.Base {
 
         public Entity(string id) {
             ID = id;
+        }
+        
+        public void AddComponent<T>() where T : IComponentData, new() {
+            var name = typeof(T).Name;
+            if (_componentMap.ContainsKey(name)) return;
+            _componentMap.Add(name, new T());
         }
         
         public void AddComponent(IComponentData component) {

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Base.Base.Interface;
+using Base.Interface;
+using Base.Utils;
 
-namespace Base.Base {
+namespace Base.Manager {
     /// <summary>
     /// 实体管理器
     /// </summary>
@@ -24,8 +25,8 @@ namespace Base.Base {
             Entities.Remove(entity);
         }
         
-        public static void AddComponent(Entity entity, IComponentData component) {
-            entity.AddComponent(component);
+        public static void AddComponent<T>(Entity entity) where T : IComponentData, new() {
+            entity.AddComponent<T>();
         }
         
         public static void RemoveComponent<T>(Entity entity) where T : IComponentData {
