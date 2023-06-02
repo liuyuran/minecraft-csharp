@@ -10,9 +10,10 @@ namespace Base.Manager {
         private static readonly List<ISystem> Systems = new();
         
         public static void Initialize() {
+            RegisterSystem(new CommandApplySystem());
             RegisterSystem(new ChunkGenerateSystem());
             RegisterSystem(new CheckDeadSystem());
-            RegisterSystem(new CommandApplySystem());
+            RegisterSystem(new AnimalGenerateSystem());
         }
 
         private static void RegisterSystem(ISystem system) {
