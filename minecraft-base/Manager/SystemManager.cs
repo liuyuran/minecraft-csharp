@@ -14,6 +14,7 @@ namespace Base.Manager {
             RegisterSystem(new ChunkGenerateSystem());
             RegisterSystem(new CheckDeadSystem());
             RegisterSystem(new AnimalGenerateSystem());
+            RegisterSystem(new StatusSyncSystem());
         }
 
         private static void RegisterSystem(ISystem system) {
