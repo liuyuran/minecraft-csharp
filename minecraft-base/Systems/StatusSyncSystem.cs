@@ -29,7 +29,7 @@ namespace Base.Systems {
                                 position.Z + z
                             ));
                             if (chunk == null) continue;
-                            CommandTransferManager.UpdateChunkForUser(chunk, player.Uuid);
+                            CommandTransferManager.NetworkAdapter?.UpdateChunkForUser(chunk, player.Uuid);
                         }
                     }
                 }
