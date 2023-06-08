@@ -26,6 +26,7 @@ namespace Base {
                     continue;
                 }
                 SystemManager.Update();
+                prev = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             }
             // ReSharper disable once FunctionNeverReturns
         }

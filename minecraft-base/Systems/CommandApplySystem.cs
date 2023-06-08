@@ -21,6 +21,7 @@ namespace Base.Systems {
                     LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     NickName = loginMessage.Message.Nickname
                 });
+                player.AddComponent<Position>();
             }
             while (CommandTransferManager.NetworkAdapter.TryGetDisconnectUser(out var logoutMessage)) {
                 foreach (var entity in EntityManager.QueryByComponents(typeof(Player))) {
