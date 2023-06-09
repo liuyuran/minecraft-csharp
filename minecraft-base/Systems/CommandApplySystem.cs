@@ -18,7 +18,7 @@ namespace Base.Systems {
                 var player = EntityManager.Instantiate();
                 player.AddComponent(new Player {
                     Uuid = loginMessage.UserID,
-                    LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                    LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     NickName = loginMessage.Message.Nickname
                 });
                 player.AddComponent<Position>();

@@ -12,11 +12,11 @@ namespace Base.Manager {
         /// </summary>
         /// <param name="adapter">自行初始化的适配器</param>
         public static void Init(INetworkAdapter adapter) {
-            NetworkAdapter?.Close();
+            Close();
             NetworkAdapter = adapter;
         }
 
-        public static void Close() {
+        private static void Close() {
             NetworkAdapter?.Close();
             NetworkAdapter = null;
         }

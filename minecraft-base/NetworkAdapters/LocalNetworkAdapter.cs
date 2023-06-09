@@ -61,5 +61,12 @@ namespace Base.NetworkAdapters {
                 Message = 0
             });
         }
+        
+        public void Disconnect(string uuid) {
+            _logoutInQueue.Enqueue(new CommandMessage<int> {
+                UserID = uuid,
+                Message = 0
+            });
+        }
     }
 }

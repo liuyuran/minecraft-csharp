@@ -15,6 +15,7 @@ namespace Base.Manager {
             RegisterSystem(new CheckDeadSystem());
             RegisterSystem(new AnimalGenerateSystem());
             RegisterSystem(new StatusSyncSystem());
+            RegisterSystem(new AutoSaveSystem());
         }
 
         private static void RegisterSystem(ISystem system) {

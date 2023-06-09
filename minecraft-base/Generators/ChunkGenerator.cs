@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Base.Blocks;
 using Base.Const;
 using Base.Utils;
@@ -19,6 +20,7 @@ namespace Base.Generators {
                 }
             }
 
+            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = false;
             return chunk;
         }
@@ -49,7 +51,8 @@ namespace Base.Generators {
                     }
                 }
             }
-
+            
+            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = false;
             return chunk;
         }
@@ -77,6 +80,7 @@ namespace Base.Generators {
                 }
             }
 
+            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = true;
             return chunk;
         }
