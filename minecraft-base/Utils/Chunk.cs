@@ -9,5 +9,9 @@ namespace Base.Utils {
         public long Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         public Vector3 Position;
         public bool IsEmpty;
+        
+        public IBlock GetBlock(int x, int y, int z) {
+            return BlockData[x, y, z];
+        }
     }
 }

@@ -7,7 +7,7 @@
         /// <summary>
         /// 视野距离
         /// </summary>
-        public const ushort DisplayDistance = 2;
+        public const ushort DisplayDistance = 1;
         /// <summary>
         /// 区块边长
         /// </summary>

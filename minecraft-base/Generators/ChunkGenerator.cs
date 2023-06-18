@@ -41,13 +41,18 @@ namespace Base.Generators {
                 Position = new Vector3(0, 0, 0),
                 IsEmpty = true
             };
+            Perlin.Reseed();
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var z = 0; z < ParamConst.ChunkSize; z++) {
-                    // TODO 这里的柏林噪声似乎返回了一个固定值，这是为啥呢？
-                    var target = 1.0f;
+                    var noise = Perlin.Noise((float)x / ParamConst.ChunkSize, (float)z / ParamConst.ChunkSize);
+                    noise += 5;
+                    noise /= 6;
+                    var target = Math.Floor(noise * ParamConst.ChunkSize);
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
-                        if (y < target) chunk.BlockData[x, y, z] = new Bedrock();
-                        else chunk.BlockData[x, y, z] = new Air();
+                        if (y < target) 
+                            chunk.BlockData[x, y, z] = new Bedrock();
+                        else 
+                            chunk.BlockData[x, y, z] = new Air();
                     }
                 }
             }

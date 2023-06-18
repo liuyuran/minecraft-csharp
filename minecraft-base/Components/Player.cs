@@ -8,7 +8,7 @@ namespace Base.Components {
         /// <summary>
         /// 通信唯一标识符
         /// </summary>
-        public string Uuid;
+        public string Uuid = "";
         /// <summary>
         /// 最后同步时间
         /// </summary>
@@ -16,6 +16,6 @@ namespace Base.Components {
         /// <summary>
         /// 角色显示名称
         /// </summary>
-        public string NickName;
+        public string NickName = "";
     }
 }
