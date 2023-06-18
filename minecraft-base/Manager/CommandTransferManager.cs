@@ -1,18 +1,24 @@
-﻿using System.Collections.Concurrent;
-using Base.Utils;
+﻿using Base.NetworkAdapters;
 
 namespace Base.Manager {
     /// <summary>
-    /// 作为状态同步和客户端命令输入的缓冲区
+    /// 作为状态同步和客户端命令输入的适配中转
     /// </summary>
     public static class CommandTransferManager {
-        public static readonly ConcurrentQueue<CommandMessage<Chunk>> ChunkQueue = new();
+        public static INetworkAdapter? NetworkAdapter;
+        
+        /// <summary>
+        /// 加载适配器
+        /// </summary>
+        /// <param name="adapter">自行初始化的适配器</param>
+        public static void Init(INetworkAdapter adapter) {
+            Close();
+            NetworkAdapter = adapter;
+        }
 
-        public static void UpdateChunkForUser(Chunk chunk, string userId) {
-            ChunkQueue.Enqueue(new CommandMessage<Chunk> {
-                UserID = userId,
-                Message = chunk
-            });
+        private static void Close() {
+            NetworkAdapter?.Close();
+            NetworkAdapter = null;
         }
     }
 }

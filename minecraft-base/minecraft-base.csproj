@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>Base</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -27,5 +27,9 @@
       <None Remove="Systems\ChunkGenerateSystem.cs.meta" />
       <None Remove="obj.meta" />
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="copy /y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;..\minecraft-unity\Assets\Scripts\PreCompile\$(TargetName).dll&quot;" />
+    </Target>
 
 </Project>
