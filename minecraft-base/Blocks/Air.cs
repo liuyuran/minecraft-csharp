@@ -1,8 +1,7 @@
 ﻿namespace Base.Blocks {
-    public class Air: IBlock {
-        public string ID => "classic:air";
-        public string Texture => "texture.jpg";
-        public string Nbt => "";
-        public bool IsAir => true;
+    public class Air: Block {
+        public override string ID => "classic:air";
+        public override string Texture => "texture.jpg";
+        public override bool Transparent => true;
     }
 }
