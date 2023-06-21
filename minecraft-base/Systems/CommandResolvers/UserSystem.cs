@@ -3,11 +3,11 @@ using Base.Components;
 using Base.Interface;
 using Base.Manager;
 
-namespace Base.Systems {
+namespace Base.Systems.CommandResolvers {
     /// <summary>
-    /// 客户端指令读取系统，前后端交互核心
+    /// 客户端指令读取，用来处理玩家的加入和退出
     /// </summary>
-    public class CommandApplySystem: ISystem {
+    public class UserSystem: ISystem {
         public void OnCreate() {
             //
         }

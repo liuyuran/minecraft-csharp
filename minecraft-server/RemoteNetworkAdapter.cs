@@ -1,4 +1,5 @@
-﻿using Base.Messages;
+﻿using System.Diagnostics.CodeAnalysis;
+using Base.Messages;
 using Base.NetworkAdapters;
 using Base.Utils;
 
@@ -21,11 +22,23 @@ namespace Server {
             throw new System.NotImplementedException();
         }
 
-        public bool TryGetDisconnectUser(out CommandMessage<int> user) {
+        public bool TryGetDisconnectUser(out CommandMessage<string> user) {
             throw new System.NotImplementedException();
         }
 
-        public void Disconnect(string uuid) {
+        public void Disconnect(string uuid, string reason) {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetChatMessage([UnscopedRef] out CommandMessage<string> message) {
+            throw new NotImplementedException();
+        }
+
+        public void BroadcastChatMessage(string message) {
+            throw new NotImplementedException();
+        }
+
+        public void SendChatMessage(string uuid, string message) {
             throw new NotImplementedException();
         }
 
@@ -39,6 +52,14 @@ namespace Server {
 
         public void Disconnect() {
             throw new System.NotImplementedException();
+        }
+
+        public void SendChatMessage(string message) {
+            throw new NotImplementedException();
+        }
+
+        public bool GetShownChatMessage([UnscopedRef] out CommandMessage<string> message) {
+            throw new NotImplementedException();
         }
     }
 }

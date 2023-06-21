@@ -7,7 +7,8 @@ namespace Base.NetworkAdapters {
     public class LocalNetworkAdapter : INetworkAdapter {
         private readonly ConcurrentQueue<CommandMessage<Chunk>> _chunkOutQueue = new();
         private readonly ConcurrentQueue<CommandMessage<UserLogin>> _loginInQueue = new();
-        private readonly ConcurrentQueue<CommandMessage<int>> _logoutInQueue = new();
+        private readonly ConcurrentQueue<CommandMessage<string>> _logoutInQueue = new();
+        private readonly ConcurrentQueue<CommandMessage<string>> _chatQueue = new();
 
         public void Close() {
             _chunkOutQueue.Clear();
@@ -21,10 +22,24 @@ namespace Base.NetworkAdapters {
             return false;
         }
 
-        public bool TryGetDisconnectUser(out CommandMessage<int> user) {
+        public bool TryGetDisconnectUser(out CommandMessage<string> user) {
             if (!_logoutInQueue.IsEmpty) return _logoutInQueue.TryDequeue(out user);
             user = default;
             return false;
+        }
+
+        public bool TryGetChatMessage(out CommandMessage<string> message) {
+            if (!_chatQueue.IsEmpty) return _chatQueue.TryDequeue(out message);
+            message = default;
+            return false;
+        }
+
+        public void BroadcastChatMessage(string message) {
+            throw new System.NotImplementedException();
+        }
+
+        public void SendChatMessage(string uuid, string message) {
+            throw new System.NotImplementedException();
         }
 
         public Chunk[] GetChunkForUser() {
@@ -56,16 +71,27 @@ namespace Base.NetworkAdapters {
 
         public void Disconnect() {
             var uuid = System.Guid.NewGuid().ToString();
-            _logoutInQueue.Enqueue(new CommandMessage<int> {
+            _logoutInQueue.Enqueue(new CommandMessage<string> {
                 UserID = uuid,
-                Message = 0
+                Message = ""
             });
         }
-        
-        public void Disconnect(string uuid) {
-            _logoutInQueue.Enqueue(new CommandMessage<int> {
+
+        public void SendChatMessage(string message) {
+            _chatQueue.Enqueue(new CommandMessage<string> {
+                UserID = System.Guid.NewGuid().ToString(),
+                Message = message
+            });
+        }
+
+        public bool GetShownChatMessage(out CommandMessage<string> message) {
+            throw new System.NotImplementedException();
+        }
+
+        public void Disconnect(string uuid, string reason) {
+            _logoutInQueue.Enqueue(new CommandMessage<string> {
                 UserID = uuid,
-                Message = 0
+                Message = reason
             });
         }
     }

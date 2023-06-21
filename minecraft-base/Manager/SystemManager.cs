@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Base.Interface;
 using Base.Systems;
+using Base.Systems.CommandResolvers;
 
 namespace Base.Manager {
     /// <summary>
@@ -10,7 +11,8 @@ namespace Base.Manager {
         private static readonly List<ISystem> Systems = new();
         
         public static void Initialize() {
-            RegisterSystem(new CommandApplySystem());
+            RegisterSystem(new ChatSystem());
+            RegisterSystem(new UserSystem());
             RegisterSystem(new ChunkGenerateSystem());
             RegisterSystem(new CheckDeadSystem());
             RegisterSystem(new AnimalGenerateSystem());
