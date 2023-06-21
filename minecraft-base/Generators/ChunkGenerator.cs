@@ -9,18 +9,24 @@ namespace Base.Generators {
         /// <summary>
         /// 生成地下地形
         /// </summary>
+        /// <param name="worldId">世界id</param>
+        /// <param name="position">区块坐标</param>
         /// <returns>生成好的区块</returns>
-        public static Chunk GenerateUnderGroundChunk() {
-            var chunk = new Chunk();
+        public static Chunk GenerateUnderGroundChunk(int worldId, Vector3 position) {
+            var chunk = new Chunk {
+                WorldId = worldId,
+                Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                Position = position,
+                IsEmpty = true
+            };
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var y = 0; y < ParamConst.ChunkSize; y++) {
                     for (var z = 0; z < ParamConst.ChunkSize; z++) {
-                        chunk.BlockData[x, y, z] = new Bedrock();
+                        chunk.SetBlock(x, y, z, new Bedrock());
                     }
                 }
             }
 
-            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = false;
             return chunk;
         }
@@ -29,16 +35,14 @@ namespace Base.Generators {
         /// 创建普通地形，预期使用波函数坍塌算法生成地形
         /// 好吧，想多了，扩展结构可以用波函数塌缩，但是纯地形只能用柏林噪声了
         /// </summary>
-        /// <param name="north">北方区块（z正方向）</param>
-        /// <param name="south">南方区块（z负方向）</param>
-        /// <param name="east">东方区块（x正方向）</param>
-        /// <param name="west">西方区块（x负方向）</param>
-        /// <param name="top">上方区块（y正方向）</param>
-        /// <param name="bottom">下方区块（y负方向）</param>
+        /// <param name="worldId">世界id</param>
+        /// <param name="position">区块坐标</param>
         /// <returns>生成好的区块</returns>
-        public static Chunk GenerateNormalChunk(Chunk? north, Chunk? south, Chunk? east, Chunk? west, Chunk? top, Chunk? bottom) {
+        public static Chunk GenerateNormalChunk(int worldId, Vector3 position) {
             var chunk = new Chunk {
-                Position = new Vector3(0, 0, 0),
+                WorldId = worldId,
+                Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                Position = position,
                 IsEmpty = true
             };
             Perlin.Reseed();
@@ -50,14 +54,13 @@ namespace Base.Generators {
                     var target = Math.Floor(noise * ParamConst.ChunkSize);
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
                         if (y < target) 
-                            chunk.BlockData[x, y, z] = new Bedrock();
+                            chunk.SetBlock(x, y, z, new Bedrock());
                         else 
-                            chunk.BlockData[x, y, z] = new Air();
+                            chunk.SetBlock(x, y, z, new Air());
                     }
                 }
             }
             
-            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = false;
             return chunk;
         }
@@ -65,27 +68,24 @@ namespace Base.Generators {
         /// <summary>
         /// 创建天空地形
         /// </summary>
-        /// <param name="north">北方区块（z正方向）</param>
-        /// <param name="south">南方区块（z负方向）</param>
-        /// <param name="east">东方区块（x正方向）</param>
-        /// <param name="west">西方区块（x负方向）</param>
-        /// <param name="top">上方区块（y正方向）</param>
-        /// <param name="bottom">下方区块（y负方向）</param>
+        /// <param name="worldId">世界id</param>
+        /// <param name="position">区块坐标</param>
         /// <returns>生成好的区块</returns>
-        public static Chunk GenerateSkyChunk(Chunk? north, Chunk? south, Chunk? east, Chunk? west, Chunk? top, Chunk? bottom) {
+        public static Chunk GenerateSkyChunk(int worldId, Vector3 position) {
             var chunk = new Chunk {
-                Position = new Vector3(0, 0, 0),
+                WorldId = worldId,
+                Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                Position = position,
                 IsEmpty = true
             };
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var z = 0; z < ParamConst.ChunkSize; z++) {
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
-                        chunk.BlockData[x, y, z] = new Air();
+                        chunk.SetBlock(x, y, z, new Air());
                     }
                 }
             }
 
-            chunk.Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             chunk.IsEmpty = true;
             return chunk;
         }

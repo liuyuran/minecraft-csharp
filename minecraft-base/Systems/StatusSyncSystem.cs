@@ -27,7 +27,7 @@ namespace Base.Systems {
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
-                            var chunk = ChunkManager.GetChunk(0, new Vector3(
+                            var chunk = ChunkManager.Instance.GetChunk(0, new Vector3(
                                 position.X + x,
                                 position.Y + y,
                                 position.Z + z

@@ -24,5 +24,9 @@
         /// 自动存档间隔
         /// </summary>
         public const long AutoSaveInterval = 10000;
+        /// <summary>
+        /// 区块自动卸载延时
+        /// </summary>
+        public const long ChunkUnloadDelay = 10000;
     }
 }
