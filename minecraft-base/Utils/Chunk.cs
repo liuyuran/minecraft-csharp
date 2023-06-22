@@ -16,8 +16,7 @@ namespace Base.Utils {
         public const int Front = 0b10000;
         public const int Back = 0b100000;
 
-        public readonly Block[,,] BlockData =
-            new Block[ParamConst.ChunkSize, ParamConst.ChunkSize, ParamConst.ChunkSize];
+        public readonly Block[,,] BlockData = new Block[ParamConst.ChunkSize, ParamConst.ChunkSize, ParamConst.ChunkSize];
 
         public long Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         public int WorldId;
@@ -119,6 +118,33 @@ namespace Base.Utils {
                 r |= Back;
             }
 
+            if (!block.Transparent) {
+                // 如果方块本身不是透明的，则更新六边可见性
+                var left = GetBlockCrossChunk(x - 1, y, z);
+                if (left is { Transparent: false }) {
+                    left.RenderFlags &= ~Right;
+                }
+                var up = GetBlockCrossChunk(x, y + 1, z);
+                if (up is { Transparent: false }l) {
+                    up.RenderFlags &= ~Down;
+                }
+                var right = GetBlockCrossChunk(x + 1, y, z);
+                if (right is { Transparent: false }) {
+                    right.RenderFlags &= ~Left;
+                }
+                var down = GetBlockCrossChunk(x, y - 1, z);
+                if (down is { Transparent: false }) {
+                    down.RenderFlags &= ~Up;
+                }
+                var back = GetBlockCrossChunk(x, y, z + 1);
+                if (back is { Transparent: false }) {
+                    back.RenderFlags &= ~Front;
+                }
+                var front = GetBlockCrossChunk(x, y, z - 1);
+                if (front is { Transparent: false }) {
+                    front.RenderFlags &= ~Back;
+                }
+            }
             block.RenderFlags = r;
             BlockData[x, y, z] = block;
         }
