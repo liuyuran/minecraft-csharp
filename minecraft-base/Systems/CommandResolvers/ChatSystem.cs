@@ -5,12 +5,12 @@ namespace Base.Systems.CommandResolvers {
     /// <summary>
     /// 客户端指令读取，用来处理玩家的聊天指令
     /// </summary>
-    public class ChatSystem: ISystem {
-        public void OnCreate() {
+    public class ChatSystem: Interface.System {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
+        public override void OnUpdate() {
             if (CommandTransferManager.NetworkAdapter == null) return;
             while (CommandTransferManager.NetworkAdapter.TryGetChatMessage(out var message)) {
                 // TODO 也许会有指令之类的场景

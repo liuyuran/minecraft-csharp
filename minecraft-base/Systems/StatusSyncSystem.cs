@@ -9,12 +9,12 @@ namespace Base.Systems {
     /// <summary>
     /// 向客户端同步生物和地图状态
     /// </summary>
-    public class StatusSyncSystem: ISystem {
-        public void OnCreate() {
+    public class StatusSyncSystem: Interface.System {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
+        public override void OnUpdate() {
             foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {
                 var player = entity.GetComponent<Player>();
                 if (player.LastSyncTime + ParamConst.DisconnectTimeout < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) {

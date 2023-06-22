@@ -10,14 +10,14 @@ namespace Base.Systems {
     /// <summary>
     /// 区块生成系统
     /// </summary>
-    public class ChunkGenerateSystem : ISystem {
+    public class ChunkGenerateSystem : Interface.System {
         private readonly Dictionary<Vector3, long> _activeChunks = new();
 
-        public void OnCreate() {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
+        public override void OnUpdate() {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // 将玩家周围的区块生成并激活
             foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {

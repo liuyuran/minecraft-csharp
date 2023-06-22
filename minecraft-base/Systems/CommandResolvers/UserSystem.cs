@@ -7,12 +7,12 @@ namespace Base.Systems.CommandResolvers {
     /// <summary>
     /// 客户端指令读取，用来处理玩家的加入和退出
     /// </summary>
-    public class UserSystem: ISystem {
-        public void OnCreate() {
+    public class UserSystem: Interface.System {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
+        public override void OnUpdate() {
             if (CommandTransferManager.NetworkAdapter == null) return;
             while (CommandTransferManager.NetworkAdapter.TryGetJoinedUser(out var loginMessage)) {
                 var player = EntityManager.Instantiate();
