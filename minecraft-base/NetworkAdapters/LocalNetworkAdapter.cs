@@ -1,14 +1,18 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Numerics;
+using Base.Components;
 using Base.Messages;
 using Base.Utils;
 
 namespace Base.NetworkAdapters {
     public class LocalNetworkAdapter : INetworkAdapter {
+        private readonly string localUserId = System.Guid.NewGuid().ToString();
         private readonly ConcurrentQueue<CommandMessage<Chunk>> _chunkOutQueue = new();
         private readonly ConcurrentQueue<CommandMessage<UserLogin>> _loginInQueue = new();
         private readonly ConcurrentQueue<CommandMessage<string>> _logoutInQueue = new();
         private readonly ConcurrentQueue<CommandMessage<string>> _chatQueue = new();
+        private readonly ConcurrentQueue<CommandMessage<PlayerInfo>> _playerInfoQueue = new();
 
         public void Close() {
             _chunkOutQueue.Clear();
@@ -42,6 +46,12 @@ namespace Base.NetworkAdapters {
             throw new System.NotImplementedException();
         }
 
+        public bool TryGetPlayerInfo(out CommandMessage<PlayerInfo> playerInfo) {
+            if (!_playerInfoQueue.IsEmpty) return _playerInfoQueue.TryDequeue(out playerInfo);
+            playerInfo = default;
+            return false;
+        }
+
         public Chunk[] GetChunkForUser() {
             var chunks = new List<Chunk>();
             while (!_chunkOutQueue.IsEmpty) {
@@ -59,33 +69,41 @@ namespace Base.NetworkAdapters {
         }
 
         public string JoinGame(string nickname) {
-            var uuid = System.Guid.NewGuid().ToString();
             _loginInQueue.Enqueue(new CommandMessage<UserLogin> {
-                UserID = uuid,
+                UserID = localUserId,
                 Message = new UserLogin {
                     Nickname = nickname
                 }
             });
-            return uuid;
+            return localUserId;
         }
 
         public void Disconnect() {
-            var uuid = System.Guid.NewGuid().ToString();
             _logoutInQueue.Enqueue(new CommandMessage<string> {
-                UserID = uuid,
+                UserID = localUserId,
                 Message = ""
             });
         }
 
         public void SendChatMessage(string message) {
             _chatQueue.Enqueue(new CommandMessage<string> {
-                UserID = System.Guid.NewGuid().ToString(),
+                UserID = localUserId,
                 Message = message
             });
         }
 
         public bool GetShownChatMessage(out CommandMessage<string> message) {
             throw new System.NotImplementedException();
+        }
+
+        public void UpdatePlayerInfo(in Position position, in Position rotation) {
+            _playerInfoQueue.Enqueue(new CommandMessage<PlayerInfo> {
+                UserID = localUserId,
+                Message = new PlayerInfo {
+                    Position = position,
+                    Rotation = rotation
+                }
+            });
         }
 
         public void Disconnect(string uuid, string reason) {

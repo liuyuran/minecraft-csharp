@@ -1,4 +1,6 @@
-﻿using Base;
+﻿using System.Numerics;
+using Base;
+using Base.Components;
 using Base.Manager;
 
 namespace Server; 
@@ -10,7 +12,13 @@ internal static class EntryPoint {
         while (true) {
             Thread.Sleep(100);
             if (CommandTransferManager.NetworkAdapter == null) continue;
-            CommandTransferManager.NetworkAdapter?.JoinGame("test");
+            CommandTransferManager.NetworkAdapter.JoinGame("test");
+            Thread.Sleep(2000);
+            CommandTransferManager.NetworkAdapter.UpdatePlayerInfo(new Position {
+                X = 4,
+                Y = 4,
+                Z = 4
+            }, new Position());
             break;
         }
         while (true) {

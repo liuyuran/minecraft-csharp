@@ -24,6 +24,10 @@ namespace Base.Utils {
             _componentMap.Add(component.GetType().Name, component);
         }
         
+        public void SetComponent(IComponentData component) {
+            _componentMap[component.GetType().Name] = component;
+        }
+        
         public void RemoveComponent<T>() where T : IComponentData {
             _componentMap.Remove(typeof(T).Name);
         }

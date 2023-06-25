@@ -1,4 +1,5 @@
-﻿using Base.Messages;
+﻿using Base.Components;
+using Base.Messages;
 using Base.Utils;
 
 namespace Base.NetworkAdapters {
@@ -14,6 +15,7 @@ namespace Base.NetworkAdapters {
         public bool TryGetChatMessage(out CommandMessage<string> message); // 获取聊天消息队列
         public void BroadcastChatMessage(string message); // 广播聊天消息
         public void SendChatMessage(string uuid, string message); // 向用户发送聊天消息
+        public bool TryGetPlayerInfo(out CommandMessage<PlayerInfo> playerInfo); // 获取玩家信息队列
 
         // client side
         public Chunk[] GetChunkForUser(); // 获取区块数据
@@ -21,5 +23,6 @@ namespace Base.NetworkAdapters {
         public void Disconnect(); // 主动断开连接
         public void SendChatMessage(string message); // 发送聊天消息
         public bool GetShownChatMessage(out CommandMessage<string> message); // 获取聊天消息队列
+        public void UpdatePlayerInfo(in Position position, in Position rotation); // 更新玩家信息
     }
 }

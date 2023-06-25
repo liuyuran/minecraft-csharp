@@ -31,6 +31,18 @@ namespace Base.Systems.CommandResolvers {
                     break;
                 }
             }
+            while (CommandTransferManager.NetworkAdapter.TryGetPlayerInfo(out var playerInfo)) {
+                foreach (var entity in EntityManager.QueryByComponents(typeof(Player))) {
+                    var player = entity.GetComponent<Player>();
+                    if (player.Uuid != playerInfo.UserID) continue;
+                    var position = entity.GetComponent<Position>();
+                    position.X = playerInfo.Message.Position.X;
+                    position.Y = playerInfo.Message.Position.Y;
+                    position.Z = playerInfo.Message.Position.Z;
+                    entity.SetComponent(position);
+                    break;
+                }
+            }
         }
     }
 }
