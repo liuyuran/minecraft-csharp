@@ -9,7 +9,7 @@ namespace Base.Systems {
     /// <summary>
     /// 向客户端同步生物和地图状态
     /// </summary>
-    public class StatusSyncSystem : Interface.System {
+    public class StatusSyncSystemBase : SystemBase {
         public override void OnCreate() {
             //
         }
@@ -17,12 +17,6 @@ namespace Base.Systems {
         public override void OnUpdate() {
             foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {
                 var player = entity.GetComponent<Player>();
-                // if (player.LastSyncTime + ParamConst.DisconnectTimeout <
-                //     DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) {
-                //     CommandTransferManager.NetworkAdapter?.Disconnect(player.Uuid);
-                //     continue;
-                // }
-
                 if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     continue;
                 // 同步地图数据

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using Base.Components;
 using Base.Const;
+using Base.Interface;
 using Base.Manager;
 
 namespace Base.Systems {
     /// <summary>
     /// 区块生成系统
     /// </summary>
-    public class ChunkGenerateSystem : Interface.System {
+    public class ChunkGenerateSystemBase : SystemBase {
         private readonly Dictionary<Vector3, long> _activeChunks = new();
 
         public override void OnCreate() {
