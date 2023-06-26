@@ -12,6 +12,10 @@ namespace Base.Manager {
         public static ArchiveManager Instance { get; } = new();
         private string _archiveName = "default";
 
+        public Chunk? LoadChunk(int worldId, Vector3 pos) {
+            return null;
+        }
+        
         public void SaveChunk(int worldId, Vector3 pos, Chunk chunkData) {
             //
         }

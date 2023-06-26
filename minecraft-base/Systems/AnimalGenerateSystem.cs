@@ -4,7 +4,7 @@ namespace Base.Systems {
     /// <summary>
     /// 友善生物生成系统
     /// </summary>
-    public class AnimalGenerateSystemBase: SystemBase {
+    public class AnimalGenerateSystem: SystemBase {
         public override void OnCreate() {
             //
         }

@@ -5,7 +5,7 @@ namespace Base.Systems {
     /// <summary>
     /// 自动存档系统
     /// </summary>
-    public class AutoSaveSystemBase: SystemBase {
+    public class AutoSaveSystem: SystemBase {
         public override void OnCreate() {
             Enabled = false;
         }

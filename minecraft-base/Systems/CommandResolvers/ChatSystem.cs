@@ -5,7 +5,7 @@ namespace Base.Systems.CommandResolvers {
     /// <summary>
     /// 客户端指令读取，用来处理玩家的聊天指令
     /// </summary>
-    public class ChatSystemBase: SystemBase {
+    public class ChatSystem: SystemBase {
         public override void OnCreate() {
             //
         }

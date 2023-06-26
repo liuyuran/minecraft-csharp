@@ -7,7 +7,7 @@ namespace Base.Systems.CommandResolvers {
     /// <summary>
     /// 客户端指令读取，用来处理玩家的加入和退出
     /// </summary>
-    public class UserSystemBase: SystemBase {
+    public class UserSystem: SystemBase {
         public override void OnCreate() {
             //
         }

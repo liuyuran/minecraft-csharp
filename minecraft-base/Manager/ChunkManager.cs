@@ -41,17 +41,20 @@ namespace Base.Manager {
         public void UnloadChunk(int worldId, Vector3 position) {
             if (!_mChunkData.ContainsKey(worldId)) return;
             if (!_mChunkData[worldId].ContainsKey(position)) return;
-            // TODO 需要同步到磁盘再删
+            ArchiveManager.Instance.SaveChunk(worldId, position, _mChunkData[worldId][position]);
             _mChunkData[worldId].Remove(position);
         }
         
-        public Chunk TryLoadChunkFromDisk(int worldId, Vector3 position) {
+        public void TryLoadChunkFromDisk(int worldId, Vector3 position) {
             if (!_mChunkData.ContainsKey(worldId)) _mChunkData.Add(worldId, new Dictionary<Vector3, Chunk>());
-            if (_mChunkData[worldId].ContainsKey(position)) return _mChunkData[worldId][position];
-            // TODO 从磁盘加载
-            var chunk = new Chunk();
-            _mChunkData[worldId].Add(position, chunk);
-            return chunk;
+            if (_mChunkData[worldId].ContainsKey(position)) return;
+            var chunk = ArchiveManager.Instance.LoadChunk(worldId, position);
+            if (chunk == null) {
+                GenerateChunk(worldId, position);
+                ArchiveManager.Instance.SaveChunk(worldId, position, _mChunkData[worldId][position]);
+            } else {
+                _mChunkData[worldId].Add(position, chunk);                
+            }
         }
     }
 }

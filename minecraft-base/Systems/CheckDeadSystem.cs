@@ -7,7 +7,7 @@ namespace Base.Systems {
     /// <summary>
     /// 死亡检测系统
     /// </summary>
-    public class CheckDeadSystemBase: SystemBase {
+    public class CheckDeadSystem: SystemBase {
         public override void OnCreate() {
             //
         }

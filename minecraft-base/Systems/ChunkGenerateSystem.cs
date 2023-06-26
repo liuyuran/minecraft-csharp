@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Base.Components;
 using Base.Const;
@@ -7,33 +8,40 @@ using Base.Manager;
 
 namespace Base.Systems {
     /// <summary>
-    /// 向客户端同步生物和地图状态
+    /// 区块生成系统
     /// </summary>
-    public class StatusSyncSystemBase : SystemBase {
+    public class ChunkGenerateSystem : SystemBase {
+        private readonly Dictionary<Vector3, long> _activeChunks = new();
+
         public override void OnCreate() {
             //
         }
 
         public override void OnUpdate() {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            // 将玩家周围的区块生成并激活
             foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Transform))) {
-                var player = entity.GetComponent<Player>();
-                if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-                    continue;
-                // 同步地图数据
                 var position = entity.GetComponent<Transform>().Position;
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
                             var pos = position + new Vector3(x, y, z);
-                            var chunk = ChunkManager.Instance.GetChunk(0, pos);
-                            if (chunk == null) continue;
-                            CommandTransferManager.NetworkAdapter?.UpdateChunkForUser(chunk, player.Uuid);
+                            _activeChunks[pos] = now;
+                            ChunkManager.Instance.TryLoadChunkFromDisk(0, pos);
                         }
                     }
                 }
-
-                // 重置计时器
-                player.LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            }
+            // 将长时间没激活的区块卸载
+            var removeList = new List<Vector3>();
+            foreach (var (pos, time) in _activeChunks) {
+                if (time + ParamConst.ChunkUnloadDelay < now) {
+                    removeList.Add(pos);
+                }
+            }
+            foreach (var pos in removeList) {
+                _activeChunks.Remove(pos);
+                ChunkManager.Instance.UnloadChunk(0, pos);
             }
         }
     }
