@@ -17,7 +17,7 @@ internal static class EntryPoint {
             CommandTransferManager.NetworkAdapter.UpdatePlayerInfo(new Transform {
                 Position = new Vector3(4, 4, 4),
                 Forward = new Vector3()
-            }, new Transform());
+            });
             break;
         }
         while (true) {

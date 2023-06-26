@@ -1,8 +1,9 @@
-﻿using Base.Components;
+﻿using System.Numerics;
+using Base.Components;
 
 namespace Base.Messages {
     public struct PlayerInfo {
-        public Transform Transform;
-        public Transform Rotation;
+        public Vector3 Transform;
+        public Vector3 Forward;
     }
 }

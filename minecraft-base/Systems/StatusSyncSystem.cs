@@ -20,7 +20,10 @@ namespace Base.Systems {
                 if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     continue;
                 // 同步地图数据
-                var position = entity.GetComponent<Transform>().Position;
+                var position = entity.GetComponent<Transform>().Position + new Vector3();
+                position.X = (float)Math.Round(position.X / ParamConst.ChunkSize);
+                position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);
+                position.Z = (float)Math.Round(position.Z / ParamConst.ChunkSize);
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {

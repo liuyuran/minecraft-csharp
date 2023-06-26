@@ -37,9 +37,8 @@ namespace Base.Systems.CommandResolvers {
                     var player = entity.GetComponent<Player>();
                     if (player.Uuid != playerInfo.UserID) continue;
                     var transform = entity.GetComponent<Transform>();
-                    transform.Position.X = playerInfo.Message.Transform.Position.X;
-                    transform.Position.Y = playerInfo.Message.Transform.Position.Y;
-                    transform.Position.Z = playerInfo.Message.Transform.Position.Z;
+                    transform.Position = playerInfo.Message.Transform;
+                    transform.Forward = playerInfo.Message.Forward;
                     entity.SetComponent(transform);
                     break;
                 }
