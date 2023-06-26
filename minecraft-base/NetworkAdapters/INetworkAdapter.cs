@@ -23,6 +23,6 @@ namespace Base.NetworkAdapters {
         public void Disconnect(); // 主动断开连接
         public void SendChatMessage(string message); // 发送聊天消息
         public bool GetShownChatMessage(out CommandMessage<string> message); // 获取聊天消息队列
-        public void UpdatePlayerInfo(in Position position, in Position rotation); // 更新玩家信息
+        public void UpdatePlayerInfo(in Transform transform, in Transform rotation); // 更新玩家信息
     }
 }

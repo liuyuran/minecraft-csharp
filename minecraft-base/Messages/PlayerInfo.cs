@@ -2,7 +2,7 @@
 
 namespace Base.Messages {
     public struct PlayerInfo {
-        public Position Position;
-        public Position Rotation;
+        public Transform Transform;
+        public Transform Rotation;
     }
 }

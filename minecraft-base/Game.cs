@@ -28,7 +28,7 @@ namespace Base {
             CommandTransferManager.Init(adapter);
             LogManager.Instance.Info("初始化网络适配器完成");
             // 扫描存档，如果存档存在，读取，如果不存在，初始化
-            ArchiveManager.LoadArchive(path);
+            ArchiveManager.Instance.LoadArchive(path);
             LogManager.Instance.Info("读取存档完成");
             // 初始化系统
             SystemManager.Initialize();

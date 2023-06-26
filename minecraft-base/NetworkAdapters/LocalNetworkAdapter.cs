@@ -96,11 +96,11 @@ namespace Base.NetworkAdapters {
             throw new System.NotImplementedException();
         }
 
-        public void UpdatePlayerInfo(in Position position, in Position rotation) {
+        public void UpdatePlayerInfo(in Transform transform, in Transform rotation) {
             _playerInfoQueue.Enqueue(new CommandMessage<PlayerInfo> {
                 UserID = localUserId,
                 Message = new PlayerInfo {
-                    Position = position,
+                    Transform = transform,
                     Rotation = rotation
                 }
             });

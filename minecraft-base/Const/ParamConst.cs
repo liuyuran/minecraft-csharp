@@ -3,7 +3,7 @@
         /// <summary>
         /// 存档基准路径
         /// </summary>
-        public const string ArchiveBasePath = "archive";
+        public const string ArchiveBasePath = "worlds";
         /// <summary>
         /// 视野距离
         /// </summary>

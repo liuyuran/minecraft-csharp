@@ -14,11 +14,10 @@ internal static class EntryPoint {
             if (CommandTransferManager.NetworkAdapter == null) continue;
             CommandTransferManager.NetworkAdapter.JoinGame("test");
             Thread.Sleep(2000);
-            CommandTransferManager.NetworkAdapter.UpdatePlayerInfo(new Position {
-                X = 4,
-                Y = 4,
-                Z = 4
-            }, new Position());
+            CommandTransferManager.NetworkAdapter.UpdatePlayerInfo(new Transform {
+                Position = new Vector3(4, 4, 4),
+                Forward = new Vector3()
+            }, new Transform());
             break;
         }
         while (true) {

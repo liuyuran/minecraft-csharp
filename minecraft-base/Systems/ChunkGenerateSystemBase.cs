@@ -20,16 +20,12 @@ namespace Base.Systems {
         public override void OnUpdate() {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // 将玩家周围的区块生成并激活
-            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {
-                var position = entity.GetComponent<Position>();
+            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Transform))) {
+                var position = entity.GetComponent<Transform>().Position;
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
-                            var pos = new Vector3(
-                                position.X + x,
-                                position.Y + y,
-                                position.Z + z
-                            );
+                            var pos = position + new Vector3(x, y, z);
                             _activeChunks[pos] = now;
                             ChunkManager.Instance.GenerateChunk(0, pos);
                         }

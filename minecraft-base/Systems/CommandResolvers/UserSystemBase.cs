@@ -21,7 +21,7 @@ namespace Base.Systems.CommandResolvers {
                     LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     NickName = loginMessage.Message.Nickname
                 });
-                player.AddComponent<Position>();
+                player.AddComponent<Transform>();
             }
             while (CommandTransferManager.NetworkAdapter.TryGetDisconnectUser(out var logoutMessage)) {
                 foreach (var entity in EntityManager.QueryByComponents(typeof(Player))) {
@@ -35,11 +35,11 @@ namespace Base.Systems.CommandResolvers {
                 foreach (var entity in EntityManager.QueryByComponents(typeof(Player))) {
                     var player = entity.GetComponent<Player>();
                     if (player.Uuid != playerInfo.UserID) continue;
-                    var position = entity.GetComponent<Position>();
-                    position.X = playerInfo.Message.Position.X;
-                    position.Y = playerInfo.Message.Position.Y;
-                    position.Z = playerInfo.Message.Position.Z;
-                    entity.SetComponent(position);
+                    var transform = entity.GetComponent<Transform>();
+                    transform.Position.X = playerInfo.Message.Transform.Position.X;
+                    transform.Position.Y = playerInfo.Message.Transform.Position.Y;
+                    transform.Position.Z = playerInfo.Message.Transform.Position.Z;
+                    entity.SetComponent(transform);
                     break;
                 }
             }

@@ -7,11 +7,11 @@ namespace Base.Systems {
     /// </summary>
     public class AutoSaveSystemBase: SystemBase {
         public override void OnCreate() {
-            //
+            Enabled = false;
         }
 
         public override void OnUpdate() {
-            ArchiveManager.SaveArchive();
+            ArchiveManager.Instance.SaveArchive();
         }
     }
 }
