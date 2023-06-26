@@ -22,6 +22,7 @@ namespace Base.Systems.CommandResolvers {
                     NickName = loginMessage.Message.Nickname
                 });
                 player.AddComponent<Transform>();
+                player.AddComponent<World>();
             }
             while (CommandTransferManager.NetworkAdapter.TryGetDisconnectUser(out var logoutMessage)) {
                 foreach (var entity in EntityManager.QueryByComponents(typeof(Player))) {
