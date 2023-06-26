@@ -17,7 +17,6 @@ namespace Base.Manager {
         }
         
         public void SaveChunk(int worldId, Vector3 pos, Chunk chunkData) {
-            //
         }
 
         public void LoadArchive(string worldName) {
