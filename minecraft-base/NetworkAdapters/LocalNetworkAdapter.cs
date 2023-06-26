@@ -7,7 +7,7 @@ using Base.Utils;
 
 namespace Base.NetworkAdapters {
     public class LocalNetworkAdapter : INetworkAdapter {
-        private readonly string localUserId = System.Guid.NewGuid().ToString();
+        private readonly string _localUserId = System.Guid.NewGuid().ToString();
         private readonly ConcurrentQueue<CommandMessage<Chunk>> _chunkOutQueue = new();
         private readonly ConcurrentQueue<CommandMessage<UserLogin>> _loginInQueue = new();
         private readonly ConcurrentQueue<CommandMessage<string>> _logoutInQueue = new();
@@ -70,24 +70,24 @@ namespace Base.NetworkAdapters {
 
         public string JoinGame(string nickname) {
             _loginInQueue.Enqueue(new CommandMessage<UserLogin> {
-                UserID = localUserId,
+                UserID = _localUserId,
                 Message = new UserLogin {
                     Nickname = nickname
                 }
             });
-            return localUserId;
+            return _localUserId;
         }
 
         public void Disconnect() {
             _logoutInQueue.Enqueue(new CommandMessage<string> {
-                UserID = localUserId,
+                UserID = _localUserId,
                 Message = ""
             });
         }
 
         public void SendChatMessage(string message) {
             _chatQueue.Enqueue(new CommandMessage<string> {
-                UserID = localUserId,
+                UserID = _localUserId,
                 Message = message
             });
         }
@@ -98,7 +98,7 @@ namespace Base.NetworkAdapters {
 
         public void UpdatePlayerInfo(in Transform transform) {
             _playerInfoQueue.Enqueue(new CommandMessage<PlayerInfo> {
-                UserID = localUserId,
+                UserID = _localUserId,
                 Message = new PlayerInfo {
                     Transform = transform.Position,
                     Forward = transform.Forward

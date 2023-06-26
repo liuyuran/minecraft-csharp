@@ -7,11 +7,11 @@
         /// <summary>
         /// 视野距离
         /// </summary>
-        public const ushort DisplayDistance = 3;
+        public const ushort DisplayDistance = 1;
         /// <summary>
         /// 区块边长
         /// </summary>
-        public const int ChunkSize = 8;
+        public const int ChunkSize = 16;
         /// <summary>
         /// 状态同步最小间隔
         /// </summary>
