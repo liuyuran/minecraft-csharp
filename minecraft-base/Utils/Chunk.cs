@@ -4,9 +4,11 @@ using System.Numerics;
 using Base.Blocks;
 using Base.Const;
 using Base.Manager;
+using ProtoBuf;
 
 namespace Base.Utils {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [ProtoContract]
     public sealed class Chunk {
         // 六个面的可见性掩码
         public const int Left = 0b1;
@@ -16,15 +18,19 @@ namespace Base.Utils {
         public const int Front = 0b10000;
         public const int Back = 0b100000;
 
-        public readonly Block[,,] BlockData = new Block[ParamConst.ChunkSize, ParamConst.ChunkSize, ParamConst.ChunkSize];
-
+        [ProtoMember(1)]
+        private readonly Block[] _blockData = new Block[ParamConst.ChunkSize * ParamConst.ChunkSize * ParamConst.ChunkSize];
+        [ProtoMember(2)]
         public long Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        [ProtoMember(3)]
         public int WorldId;
+        [ProtoMember(4)]
         public Vector3 Position;
+        [ProtoMember(5)]
         public bool IsEmpty;
 
         public Block GetBlock(int x, int y, int z) {
-            return BlockData[x, y, z];
+            return _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
         }
 
         private Block? GetBlockCrossChunk(int x, int y, int z) {
@@ -146,7 +152,7 @@ namespace Base.Utils {
                 }
             }
             block.RenderFlags = r;
-            BlockData[x, y, z] = block;
+            _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z] = block;
         }
     }
 }
