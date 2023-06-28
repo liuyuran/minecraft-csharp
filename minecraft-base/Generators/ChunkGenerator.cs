@@ -22,7 +22,7 @@ namespace Base.Generators {
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var y = 0; y < ParamConst.ChunkSize; y++) {
                     for (var z = 0; z < ParamConst.ChunkSize; z++) {
-                        chunk.SetBlock(x, y, z, new Bedrock());
+                        chunk.SetBlock(x, y, z, new Stone());
                     }
                 }
             }
@@ -54,7 +54,7 @@ namespace Base.Generators {
                     var target = Math.Floor(noise * ParamConst.ChunkSize);
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
                         if (y < target) 
-                            chunk.SetBlock(x, y, z, new Bedrock());
+                            chunk.SetBlock(x, y, z, new Stone());
                         else 
                             chunk.SetBlock(x, y, z, new Air());
                     }
