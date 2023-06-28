@@ -18,6 +18,7 @@ namespace Base.Manager {
         /// <param name="position">区块世界坐标</param>
         /// <returns></returns>
         public Chunk? GetChunk(int worldId, Vector3 position) {
+            if (!_mChunkData.ContainsKey(worldId)) return null;
             var chunks = _mChunkData[worldId];
             return chunks.TryGetValue(position, out var chunk) ? chunk : null;
         }

@@ -1,6 +1,6 @@
 ﻿namespace Base.Blocks {
     public class Stone: Block {
-        public override string ID => "classic:bedrock";
+        public override string ID => "classic:stone";
         public override string Icon => "";
         public override string Texture => "texture.jpg";
         public override string Name => "石头";
