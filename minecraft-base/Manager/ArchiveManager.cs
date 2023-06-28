@@ -59,7 +59,7 @@ namespace Base.Manager {
             if (!Directory.Exists(path)) return null;
             var filename = $"{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.bin";
             if (!File.Exists($"{path}/{filename}")) return null;
-            using var file = File.OpenRead($"{path}/{filename}.bin");
+            using var file = File.OpenRead($"{path}/{filename}");
             var chunk = Serializer.Deserialize<Chunk>(file);
             return chunk;
         }

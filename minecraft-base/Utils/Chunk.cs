@@ -8,7 +8,7 @@ using ProtoBuf;
 
 namespace Base.Utils {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [ProtoContract]
+    [ProtoContract(SkipConstructor=true)]
     public sealed class Chunk {
         // 六个面的可见性掩码
         public const int Left = 0b1;
