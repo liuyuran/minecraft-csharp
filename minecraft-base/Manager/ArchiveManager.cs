@@ -28,7 +28,7 @@ namespace Base.Manager {
                 var type = types[index];
                 if (type.IsAbstract || type.FullName == null) continue;
                 if (!type.IsSubclassOf(baseType)) continue;
-                subTypeDefine.AddSubType(index + 100, type);
+                subTypeDefine.AddSubType(index + 1, type);
             }
         }
 

@@ -4,6 +4,7 @@ using Base.Components;
 using Base.Const;
 using Base.Interface;
 using Base.Manager;
+using Base.Messages;
 
 namespace Base.Systems {
     /// <summary>
@@ -15,7 +16,7 @@ namespace Base.Systems {
         }
 
         public override void OnUpdate() {
-            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Transform))) {
+            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player), typeof(Transform))) {
                 var player = entity.GetComponent<Player>();
                 if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     continue;
@@ -30,7 +31,9 @@ namespace Base.Systems {
                             var pos = position + new Vector3(x, y, z);
                             var chunk = ChunkManager.Instance.GetChunk(0, pos);
                             if (chunk == null) continue;
-                            CommandTransferManager.NetworkAdapter?.UpdateChunkForUser(chunk, player.Uuid);
+                            CommandTransferManager.NetworkAdapter?.SendToClient(player.Uuid, new ChunkUpdateEvent {
+                                Chunk = chunk
+                            });
                         }
                     }
                 }

@@ -20,7 +20,7 @@ namespace Base.Systems {
         public override void OnUpdate() {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // 将玩家周围的区块生成并激活
-            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Transform))) {
+            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player), typeof(Transform))) {
                 var position = entity.GetComponent<Transform>().Position + new Vector3();
                 position.X = (float)Math.Round(position.X / ParamConst.ChunkSize);
                 position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);

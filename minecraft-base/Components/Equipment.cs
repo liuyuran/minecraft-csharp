@@ -2,9 +2,9 @@
 
 namespace Base.Components {
     /// <summary>
-    /// 标记可以存储物品，同时存储物品栏信息
+    /// 标记可以装备物品，同时存储装备信息
     /// </summary>
-    public class Storage: IComponentData {
+    public class Equipment: IComponentData {
         //
     }
 }

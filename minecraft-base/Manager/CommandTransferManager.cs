@@ -17,7 +17,7 @@ namespace Base.Manager {
         }
 
         private static void Close() {
-            NetworkAdapter?.Close();
+            NetworkAdapter?.Dispose();
             NetworkAdapter = null;
         }
     }
