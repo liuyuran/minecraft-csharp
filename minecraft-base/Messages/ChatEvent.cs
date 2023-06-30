@@ -2,6 +2,6 @@
 
 namespace Base.Messages {
     public class ChatEvent: GameEvent {
-        public string message;
+        public string Message = "";
     }
 }
