@@ -4,9 +4,11 @@ using System.Numerics;
 using Base.Blocks;
 using Base.Const;
 using Base.Manager;
+using ProtoBuf;
 
 namespace Base.Utils {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [ProtoContract(SkipConstructor=true)]
     public sealed class Chunk {
         // 六个面的可见性掩码
         public const int Left = 0b1;
@@ -16,16 +18,19 @@ namespace Base.Utils {
         public const int Front = 0b10000;
         public const int Back = 0b100000;
 
-        public readonly Block[,,] BlockData =
-            new Block[ParamConst.ChunkSize, ParamConst.ChunkSize, ParamConst.ChunkSize];
-
+        [ProtoMember(1)]
+        private readonly Block[] _blockData = new Block[ParamConst.ChunkSize * ParamConst.ChunkSize * ParamConst.ChunkSize];
+        [ProtoMember(2)]
         public long Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        [ProtoMember(3)]
         public int WorldId;
+        [ProtoMember(4)]
         public Vector3 Position;
+        [ProtoMember(5)]
         public bool IsEmpty;
 
         public Block GetBlock(int x, int y, int z) {
-            return BlockData[x, y, z];
+            return _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
         }
 
         private Block? GetBlockCrossChunk(int x, int y, int z) {
@@ -119,8 +124,35 @@ namespace Base.Utils {
                 r |= Back;
             }
 
+            if (!block.Transparent) {
+                // 如果方块本身不是透明的，则更新六边可见性
+                var left = GetBlockCrossChunk(x - 1, y, z);
+                if (left is { Transparent: false }) {
+                    left.RenderFlags &= ~Right;
+                }
+                var up = GetBlockCrossChunk(x, y + 1, z);
+                if (up is { Transparent: false }l) {
+                    up.RenderFlags &= ~Down;
+                }
+                var right = GetBlockCrossChunk(x + 1, y, z);
+                if (right is { Transparent: false }) {
+                    right.RenderFlags &= ~Left;
+                }
+                var down = GetBlockCrossChunk(x, y - 1, z);
+                if (down is { Transparent: false }) {
+                    down.RenderFlags &= ~Up;
+                }
+                var back = GetBlockCrossChunk(x, y, z + 1);
+                if (back is { Transparent: false }) {
+                    back.RenderFlags &= ~Front;
+                }
+                var front = GetBlockCrossChunk(x, y, z - 1);
+                if (front is { Transparent: false }) {
+                    front.RenderFlags &= ~Back;
+                }
+            }
             block.RenderFlags = r;
-            BlockData[x, y, z] = block;
+            _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z] = block;
         }
     }
 }

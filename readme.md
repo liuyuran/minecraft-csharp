@@ -1,10 +1,18 @@
-个人游戏主项目
+Main project of my unity game
 ---
 
-该项目用于从根本上建立同构的客户端/服务端模式，毕竟Unity编译出来的东西想跑在Docker里简直是个灾难。
+That game is minecraft-like, but have no idea to make what game, and what gameplay it include.
 
-## 项目结构
+Well, I want to create a game that need lower resource(maybe more, because I'm not a pro game engineer, but a java web engineer).
 
-- `minecraft-base` 公共代码，用于实现内置服务端
-- `minecraft-unity` 客户端代码
-- `minecraft-server` 服务端代码
+It won't evolution to another minetest or minecraft, I'm sure I don't want it.
+
+So careful, maybe you don't want to watch that repo after read readme.
+
+Hope politics never kill my dreams.
+
+## project structure
+
+- `minecraft-base` public code
+- `minecraft-unity` client code
+- `minecraft-server` server code

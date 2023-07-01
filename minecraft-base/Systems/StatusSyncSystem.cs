@@ -4,39 +4,40 @@ using Base.Components;
 using Base.Const;
 using Base.Interface;
 using Base.Manager;
+using Base.Messages;
 
 namespace Base.Systems {
     /// <summary>
     /// 向客户端同步生物和地图状态
     /// </summary>
-    public class StatusSyncSystem: ISystem {
-        public void OnCreate() {
+    public class StatusSyncSystem : SystemBase {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
-            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {
+        public override void OnUpdate() {
+            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player), typeof(Transform))) {
                 var player = entity.GetComponent<Player>();
-                if (player.LastSyncTime + ParamConst.DisconnectTimeout < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) {
-                    CommandTransferManager.NetworkAdapter?.Disconnect(player.Uuid);
+                if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     continue;
-                }
-                if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) continue;
                 // 同步地图数据
-                var position = entity.GetComponent<Position>();
+                var position = entity.GetComponent<Transform>().Position + new Vector3();
+                position.X = (float)Math.Round(position.X / ParamConst.ChunkSize);
+                position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);
+                position.Z = (float)Math.Round(position.Z / ParamConst.ChunkSize);
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
-                            var chunk = ChunkManager.Instance.GetChunk(0, new Vector3(
-                                position.X + x,
-                                position.Y + y,
-                                position.Z + z
-                            ));
+                            var pos = position + new Vector3(x, y, z);
+                            var chunk = ChunkManager.Instance.GetChunk(0, pos);
                             if (chunk == null) continue;
-                            CommandTransferManager.NetworkAdapter?.UpdateChunkForUser(chunk, player.Uuid);
+                            CommandTransferManager.NetworkAdapter?.SendToClient(player.Uuid, new ChunkUpdateEvent {
+                                Chunk = chunk
+                            });
                         }
                     }
                 }
+
                 // 重置计时器
                 player.LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }

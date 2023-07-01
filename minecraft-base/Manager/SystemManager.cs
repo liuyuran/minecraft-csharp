@@ -1,30 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Base.Interface;
-using Base.Systems;
 
 namespace Base.Manager {
     /// <summary>
     /// 系统管理器，用来从代码层面注册并启动各类系统
     /// </summary>
     public static class SystemManager {
-        private static readonly List<ISystem> Systems = new();
-        
+        private static readonly List<Interface.SystemBase> Systems = new();
+
         public static void Initialize() {
-            RegisterSystem(new CommandApplySystem());
-            RegisterSystem(new ChunkGenerateSystem());
-            RegisterSystem(new CheckDeadSystem());
-            RegisterSystem(new AnimalGenerateSystem());
-            RegisterSystem(new StatusSyncSystem());
-            RegisterSystem(new AutoSaveSystem());
+            var assem = typeof(SystemBase).Assembly;
+            var baseType = typeof(SystemBase);
+            var types = assem.GetExportedTypes();
+            foreach (var type in types) {
+                if (type.IsAbstract || type.FullName == null) continue;
+                if (!type.IsSubclassOf(baseType)) continue;
+                if (assem.CreateInstance(
+                        type.FullName, false,
+                        BindingFlags.ExactBinding,
+                        null, new object[] { }, null, null
+                    ) is not SystemBase instance) continue;
+                RegisterSystem(instance);
+            }
         }
 
-        private static void RegisterSystem(ISystem system) {
-            system.OnCreate();
-            Systems.Add(system);
+        private static void RegisterSystem(SystemBase systemBase) {
+            systemBase.OnCreate();
+            Systems.Add(systemBase);
         }
-        
+
         public static void Update() {
-            foreach (var system in Systems) {
+            foreach (var system in Systems.Where(system => system.Enabled)) {
                 system.OnUpdate();
             }
         }

@@ -28,8 +28,12 @@
       <None Remove="obj.meta" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="protobuf-net" Version="3.2.26" />
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="copy /y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;..\minecraft-unity\Assets\Scripts\PreCompile\$(TargetName).dll&quot;" />
+      <Exec Command="copy /y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;..\minecraft-unity\Assets\Scripts\PreCompile\$(TargetName).dll&quot;;&#xA;copy /y &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;..\minecraft-unity\Assets\Scripts\PreCompile\$(TargetName).pdb&quot;" />
     </Target>
 
 </Project>
