@@ -6,7 +6,6 @@ using Base.Manager;
 namespace Base.Events.Handler {
     public class PlayerJoinEventHandler: IGameEventHandler<PlayerJoinEvent> {
         public void Run(PlayerJoinEvent loginMessage) {
-            Console.WriteLine(loginMessage.Nickname + " joined the game!");
             var player = EntityManager.Instance.Instantiate();
             player.AddComponent(new Player {
                 Uuid = loginMessage.UserID,
@@ -18,6 +17,7 @@ namespace Base.Events.Handler {
             player.AddComponent<Health>();
             player.AddComponent<Equipment>();
             player.AddComponent<Storage>();
+            LogManager.Instance.Info($"{loginMessage.Nickname} joined the game!");
         }
     }
 }
