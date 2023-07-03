@@ -23,6 +23,10 @@ internal static class EntryPoint {
             });
             break;
         }
+
+        MessageTypeManager.Instance.FireEvent(new ChatEvent {
+            Message = ""
+        });
         while (true) {
             var command = Console.ReadLine();
             if (command == "exit") {
