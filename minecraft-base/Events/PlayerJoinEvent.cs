@@ -1,6 +1,6 @@
 ﻿using Base.Interface;
 
-namespace Base.Messages {
+namespace Base.Events {
     public class PlayerJoinEvent: GameEvent {
         public string Nickname = "";
     }

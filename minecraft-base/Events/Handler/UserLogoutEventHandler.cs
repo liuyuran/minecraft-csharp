@@ -1,9 +1,8 @@
 ﻿using Base.Components;
 using Base.Interface;
 using Base.Manager;
-using Base.Messages;
 
-namespace Base.MessageHandlers {
+namespace Base.Events.Handler {
     public class UserLogoutEventHandler: IGameEventHandler<PlayerLogoutEvent> {
         public void Run(PlayerLogoutEvent logoutMessage) {
             foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player))) {

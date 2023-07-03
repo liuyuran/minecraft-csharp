@@ -2,7 +2,7 @@
 using Base.Interface;
 using Base.Utils;
 
-namespace Base.Messages {
+namespace Base.Events {
     public class BlockUpdateEvent: GameEvent {
         public enum ActionTypeEnum {
             Dig = 0,

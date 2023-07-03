@@ -1,6 +1,6 @@
 ﻿using Base.Interface;
 
-namespace Base.Messages {
+namespace Base.Events {
     public class ChatEvent: GameEvent {
         public string Message = "";
     }

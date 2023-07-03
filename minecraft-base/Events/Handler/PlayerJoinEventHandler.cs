@@ -2,9 +2,8 @@
 using Base.Components;
 using Base.Interface;
 using Base.Manager;
-using Base.Messages;
 
-namespace Base.MessageHandlers {
+namespace Base.Events.Handler {
     public class PlayerJoinEventHandler: IGameEventHandler<PlayerJoinEvent> {
         public void Run(PlayerJoinEvent loginMessage) {
             Console.WriteLine(loginMessage.Nickname + " joined the game!");
