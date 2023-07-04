@@ -32,66 +32,7 @@ namespace Base.Utils {
         public Block GetBlock(int x, int y, int z) {
             return _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
         }
-
-        private Block? GetBlockCrossChunk(int x, int y, int z) {
-            var target = this;
-            while (x < 0) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(-1, 0, 0));
-                if (target == null) {
-                    return null;
-                }
-
-                x += ParamConst.ChunkSize;
-            }
-
-            while (x > ParamConst.ChunkSize - 1) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(1, 0, 0));
-                if (target == null) {
-                    return null;
-                }
-
-                x -= ParamConst.ChunkSize;
-            }
-
-            while (y < 0) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, -1, 0));
-                if (target == null) {
-                    return null;
-                }
-
-                y += ParamConst.ChunkSize;
-            }
-
-            while (y > ParamConst.ChunkSize - 1) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 1, 0));
-                if (target == null) {
-                    return null;
-                }
-
-                y -= ParamConst.ChunkSize;
-            }
-
-            while (z < 0) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, -1));
-                if (target == null) {
-                    return null;
-                }
-
-                z += ParamConst.ChunkSize;
-            }
-
-            while (z > ParamConst.ChunkSize - 1) {
-                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, 1));
-                if (target == null) {
-                    return null;
-                }
-
-                z -= ParamConst.ChunkSize;
-            }
-
-            return target.GetBlock(x, y, z);
-        }
-
+        
         public void SetBlock(int x, int y, int z, Block block) {
             var r = 0;
             if (GetBlockCrossChunk(x - 1, y, z)?.Transparent ?? true) {
@@ -153,6 +94,124 @@ namespace Base.Utils {
             }
             block.RenderFlags = r;
             _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z] = block;
+        }
+
+        public Block? GetBlockCrossChunk(int x, int y, int z) {
+            var target = this;
+            while (x < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(-1, 0, 0));
+                if (target == null) {
+                    return null;
+                }
+
+                x += ParamConst.ChunkSize;
+            }
+
+            while (x > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(1, 0, 0));
+                if (target == null) {
+                    return null;
+                }
+
+                x -= ParamConst.ChunkSize;
+            }
+
+            while (y < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, -1, 0));
+                if (target == null) {
+                    return null;
+                }
+
+                y += ParamConst.ChunkSize;
+            }
+
+            while (y > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 1, 0));
+                if (target == null) {
+                    return null;
+                }
+
+                y -= ParamConst.ChunkSize;
+            }
+
+            while (z < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, -1));
+                if (target == null) {
+                    return null;
+                }
+
+                z += ParamConst.ChunkSize;
+            }
+
+            while (z > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, 1));
+                if (target == null) {
+                    return null;
+                }
+
+                z -= ParamConst.ChunkSize;
+            }
+
+            return target.GetBlock(x, y, z);
+        }
+        
+        public void SetBlockCrossChunk(int x, int y, int z, Block block) {
+            var target = this;
+            while (x < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(-1, 0, 0));
+                if (target == null) {
+                    return;
+                }
+
+                x += ParamConst.ChunkSize;
+            }
+
+            while (x > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(1, 0, 0));
+                if (target == null) {
+                    return;
+                }
+
+                x -= ParamConst.ChunkSize;
+            }
+
+            while (y < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, -1, 0));
+                if (target == null) {
+                    return;
+                }
+
+                y += ParamConst.ChunkSize;
+            }
+
+            while (y > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 1, 0));
+                if (target == null) {
+                    return;
+                }
+
+                y -= ParamConst.ChunkSize;
+            }
+
+            while (z < 0) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, -1));
+                if (target == null) {
+                    return;
+                }
+
+                z += ParamConst.ChunkSize;
+            }
+
+            while (z > ParamConst.ChunkSize - 1) {
+                target = ChunkManager.Instance.GetChunk(WorldId, Position + new Vector3(0, 0, 1));
+                if (target == null) {
+                    return;
+                }
+
+                z -= ParamConst.ChunkSize;
+            }
+
+            target.SetBlock(x, y, z, block);
         }
     }
 }

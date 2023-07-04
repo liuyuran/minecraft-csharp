@@ -1,4 +1,6 @@
-﻿namespace Base.Blocks {
+﻿using Base.Enums;
+
+namespace Base.Blocks {
     public class Dirt: Block {
         public override string ID => "classic:dirt";
         public override string Icon => "";

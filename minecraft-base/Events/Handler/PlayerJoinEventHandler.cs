@@ -1,6 +1,7 @@
 ﻿using System;
 using Base.Components;
 using Base.Interface;
+using Base.Items;
 using Base.Manager;
 
 namespace Base.Events.Handler {
@@ -16,7 +17,12 @@ namespace Base.Events.Handler {
             player.AddComponent<World>();
             player.AddComponent<Health>();
             player.AddComponent<Equipment>();
-            player.AddComponent<Storage>();
+            player.AddComponent(new Inventory {
+                Size = 32,
+                Items = new Item[32]
+            });
+            player.AddComponent<ToolInHand>();
+            PlayerManager.Instance.AddPlayer(loginMessage.UserID, player);
             LogManager.Instance.Info($"{loginMessage.Nickname} joined the game!");
         }
     }

@@ -8,8 +8,9 @@ namespace Base.Events.Handler {
             foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player))) {
                 var player = entity.GetComponent<Player>();
                 if (player.Uuid != logoutMessage.UserID) continue;
-                LogManager.Instance.Debug($"Player {player.NickName} logged out");
                 EntityManager.Instance.Destroy(entity);
+                PlayerManager.Instance.RemovePlayer(logoutMessage.UserID);
+                LogManager.Instance.Debug($"Player {player.NickName} logged out");
                 break;
             }
         }
