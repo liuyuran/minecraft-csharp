@@ -9,7 +9,7 @@ namespace Base.Items {
         public virtual string Icon => ""; // 物品图标
         public virtual string Name => ""; // 物品名称
         public virtual string Description => ""; // 物品描述
-        protected virtual int ItemType => 0; // 物品类型
+        public virtual int ItemType => (int)Enums.ItemType.None; // 物品类型
         public virtual int MaxDurability => -1; // 最大耐久
         [ProtoMember(1)]
         public int Durability = -1; // 当前耐久

@@ -13,9 +13,9 @@ namespace Base.Systems {
         }
 
         public override void OnUpdate() {
-            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Health))) {
-                var component = entity.GetComponent<Health>();
-                if (component.health <= 0 && !entity.HasComponent<IsDead>()) {
+            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(HealthData))) {
+                var component = entity.GetComponent<HealthData>();
+                if (component.Health <= 0 && !entity.HasComponent<IsDead>()) {
                     entity.AddComponent<IsDead>();
                 }
             }

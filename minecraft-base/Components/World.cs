@@ -1,7 +1,7 @@
 ﻿using Base.Interface;
 
 namespace Base.Components {
-    public struct World: IComponentData {
-        public int worldId;
+    public class World: IComponentData {
+        public int WorldId = 0;
     }
 }

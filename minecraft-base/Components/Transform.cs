@@ -2,7 +2,7 @@
 using Base.Interface;
 
 namespace Base.Components {
-    public struct Transform: IComponentData {
+    public class Transform: IComponentData {
         public Vector3 Position;
         public Vector3 Forward;
     }

@@ -15,7 +15,7 @@ namespace Base.Events.Handler {
             });
             player.AddComponent<Transform>();
             player.AddComponent<World>();
-            player.AddComponent<Health>();
+            player.AddComponent<HealthData>();
             player.AddComponent<Equipment>();
             player.AddComponent(new Inventory {
                 Size = 32,

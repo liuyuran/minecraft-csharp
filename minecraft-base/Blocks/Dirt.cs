@@ -8,6 +8,7 @@ namespace Base.Blocks {
         public override string Name => "泥土";
         public override string Description => "泥土";
         public override BlockType Type => BlockType.Solid;
+        public override ItemType DigRequire => Enums.ItemType.Shovel;
         public override int HardnessLevel => 2;
         public override int MaxDurability => 30;
     }

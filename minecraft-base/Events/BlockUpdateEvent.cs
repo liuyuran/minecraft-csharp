@@ -10,7 +10,7 @@ namespace Base.Events {
     public class BlockUpdateEvent: GameEvent {
         public enum ActionTypeEnum {
             Dig = 0,
-            Action = 1,
+            Active = 1,
         }
         public int WorldId = 0;
         public Vector3 ChunkPos = Vector3.Zero;
