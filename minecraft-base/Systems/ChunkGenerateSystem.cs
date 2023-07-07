@@ -10,28 +10,27 @@ namespace Base.Systems {
     /// <summary>
     /// 区块生成系统
     /// </summary>
-    public class ChunkGenerateSystem : ISystem {
+    public class ChunkGenerateSystem : SystemBase {
         private readonly Dictionary<Vector3, long> _activeChunks = new();
 
-        public void OnCreate() {
+        public override void OnCreate() {
             //
         }
 
-        public void OnUpdate() {
+        public override void OnUpdate() {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // 将玩家周围的区块生成并激活
-            foreach (var entity in EntityManager.QueryByComponents(typeof(Player), typeof(Position))) {
-                var position = entity.GetComponent<Position>();
+            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player), typeof(Transform))) {
+                var position = entity.GetComponent<Transform>().Position + new Vector3();
+                position.X = (float)Math.Round(position.X / ParamConst.ChunkSize);
+                position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);
+                position.Z = (float)Math.Round(position.Z / ParamConst.ChunkSize);
                 for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
                     for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
                         for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
-                            var pos = new Vector3(
-                                position.X + x,
-                                position.Y + y,
-                                position.Z + z
-                            );
+                            var pos = position + new Vector3(x, y, z);
                             _activeChunks[pos] = now;
-                            ChunkManager.Instance.GenerateChunk(0, pos);
+                            ChunkManager.Instance.TryLoadChunkFromDisk(0, pos);
                         }
                     }
                 }

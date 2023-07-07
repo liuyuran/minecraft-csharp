@@ -8,36 +8,38 @@ namespace Base.Manager {
     /// <summary>
     /// 实体管理器
     /// </summary>
-    public static class EntityManager {
-        private static readonly List<Entity> Entities = new();
+    public class EntityManager {
+        public static EntityManager Instance { get; } = new();
 
-        public static Entity Instantiate() {
+        private readonly List<Entity> _entities = new();
+
+        public Entity Instantiate() {
             var entity = new Entity(Guid.NewGuid().ToString());
-            Entities.Add(entity);
+            _entities.Add(entity);
             return entity;
         }
         
-        public static Entity[] QueryByComponents(params Type[] components) {
-            return (from entity in Entities let hasAllComponents = components.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
+        public Entity[] QueryByComponents(params Type[] components) {
+            return (from entity in _entities let hasAllComponents = components.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
         }
         
-        public static void Destroy(Entity entity) {
-            Entities.Remove(entity);
+        public void Destroy(Entity entity) {
+            _entities.Remove(entity);
         }
         
-        public static void AddComponent<T>(Entity entity) where T : IComponentData, new() {
+        public void AddComponent<T>(Entity entity) where T : IComponentData, new() {
             entity.AddComponent<T>();
         }
         
-        public static void RemoveComponent<T>(Entity entity) where T : IComponentData {
+        public void RemoveComponent<T>(Entity entity) where T : IComponentData {
             entity.RemoveComponent<T>();
         }
         
-        public static bool HasComponent<T>(Entity entity) where T : IComponentData {
+        public bool HasComponent<T>(Entity entity) where T : IComponentData {
             return entity.HasComponent<T>();
         }
         
-        public static T GetComponent<T>(Entity entity) where T : IComponentData {
+        public T GetComponent<T>(Entity entity) where T : IComponentData {
             return entity.GetComponent<T>();
         }
     }
