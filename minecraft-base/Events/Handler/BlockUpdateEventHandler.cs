@@ -24,7 +24,9 @@ namespace Base.Events.Handler {
                     if (loot > dropItem.Weight) continue;
                     var item = EntityManager.Instance.Instantiate();
                     item.AddComponent(new DroppedItem {
-                        ItemID = dropItem.Item.ID
+                        ItemID = dropItem.Item.ID,
+                        Count = dropItem.DropCount,
+                        Meta = dropItem.Meta 
                     });
                     item.AddComponent(new Transform {
                         Forward = Vector3.Zero,
@@ -37,7 +39,6 @@ namespace Base.Events.Handler {
                 }
             };
             EventBus.Instance.ItemUsedEvent += @event => {
-                // TODO 放置方块
                 if ((@event.Item.ItemType & (int)ItemType.Block) > 0) {
                     var targetPos = @event.BlockPos;
                     switch (@event.Direction) {
