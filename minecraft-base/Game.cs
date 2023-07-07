@@ -8,12 +8,18 @@ namespace Base {
     /// 游戏服务器核心逻辑循环入口类
     /// </summary>
     public static class Game {
+        private static bool _isRunning = false; 
+        
         /// <summary>
         /// 以本地适配器模式启动服务器
         /// </summary>
         /// <param name="path">存档地址</param>
         public static void Start(string path) {
             Start(path, new LocalNetworkAdapter());
+        }
+
+        public static void Stop() {
+            _isRunning = false;
         }
         
         /// <summary>
@@ -23,6 +29,7 @@ namespace Base {
         /// <param name="adapter">自定义适配器实例</param>
         // ReSharper disable once MemberCanBePrivate.Global
         public static void Start(string path, INetworkAdapter adapter) {
+            _isRunning = true;
             LogManager.Instance.Info("服务器启动中，请稍等...");
             // 设定网络模式
             CommandTransferManager.Init(adapter);
@@ -36,7 +43,7 @@ namespace Base {
             // 开始游戏循环
             var prev = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             LogManager.Instance.Info("逻辑服务器启动完毕");
-            while (true) {
+            while (_isRunning) {
                 // 确保最高100ms一次的刷新频率
                 var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 if (now - prev < 100) {
@@ -46,7 +53,6 @@ namespace Base {
                 SystemManager.Update();
                 prev = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }
-            // ReSharper disable once FunctionNeverReturns
         }
     }
 }

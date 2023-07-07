@@ -2,4 +2,9 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;PhysicalFolder Path="C:\Users\liuyu\.nuget\packages\protobuf-net\3.2.26" Loaded="True" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cc38e72e_002D5323_002D4d39_002Da8a4_002De1bc5f9e4727/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="minecraft-test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::B6AF31A1-7894-40A8-A35F-612F62956391::net7.0::UnitTest.BlackBox.Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=78f5b0e3_002D38b8_002Debb6_002D76f8_002D42a8b9ac08ad_0023minecraft_002Dunity/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

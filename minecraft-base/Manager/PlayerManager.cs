@@ -15,8 +15,8 @@ namespace Base.Manager {
             _playerLink.Remove(uuid);
         }
         
-        public Entity GetPlayer(string uuid) {
-            return _playerLink[uuid];
+        public Entity? GetPlayer(string uuid) {
+            return _playerLink.TryGetValue(uuid, out var player) ? player : null;
         }
     }
 }
