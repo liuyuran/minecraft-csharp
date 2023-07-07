@@ -45,7 +45,6 @@ public class Tests {
     /// </summary>
     [Test, Order(1)]
     public void UserJoin() {
-        Thread.Sleep(500);
         var uuid = CommandTransferManager.NetworkAdapter?.GetCurrentPlayerUuid();
         Assert.That(uuid, Is.Not.Null);
         if (uuid == null) return;

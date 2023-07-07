@@ -75,7 +75,7 @@ namespace Base.Manager {
             return null;
         }
 
-        public void SavePlayer(int worldId, Entity playerData) { }
+        public void SavePlayer(Entity playerData) { }
 
         private static string IntToHex(float value) {
             return Convert.ToString((int) value, 16);
