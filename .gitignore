@@ -69,3 +69,4 @@ minecraft-server/bin/
 minecraft-base/bin/
 *.meta
 unit-test/obj/
+unit-test/bin/
