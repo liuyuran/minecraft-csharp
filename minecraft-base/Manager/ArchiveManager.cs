@@ -6,6 +6,7 @@ using Base.Const;
 using Base.Utils;
 using ProtoBuf;
 using ProtoBuf.Meta;
+using Microsoft.Data.Sqlite;
 
 namespace Base.Manager {
     /// <summary>
@@ -75,7 +76,22 @@ namespace Base.Manager {
             return null;
         }
 
-        public void SavePlayer(Entity playerData) { }
+        public void SavePlayer(Entity playerData) {
+            var connectionString = $"Data Source={_archiveName}/player/player.db";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            // Create the table
+            using (var command = connection.CreateCommand()) {
+                command.CommandText = "CREATE TABLE IF NOT EXISTS Player (Id INTEGER PRIMARY KEY, Name TEXT)";
+                command.ExecuteNonQuery();
+            }
+            using (var command = connection.CreateCommand()) {
+                command.CommandText = "update Player set Name = 'test' where Id = 1";
+                command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
 
         private static string IntToHex(float value) {
             return Convert.ToString((int) value, 16);

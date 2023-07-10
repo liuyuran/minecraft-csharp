@@ -79,10 +79,12 @@ namespace Base.Events.Handler {
             switch (e.ActionType) {
                 case BlockUpdateEvent.ActionTypeEnum.Dig:
                     // 破坏方块
+                    LogManager.Instance.Debug("收到挖掘事件");
                     DigAction(e);
                     break;
                 case BlockUpdateEvent.ActionTypeEnum.Active:
                     // 使用手中的工具，或激活方块
+                    LogManager.Instance.Debug("收到激活事件");
                     ActiveAction(e);
                     break;
                 default:
@@ -97,7 +99,10 @@ namespace Base.Events.Handler {
             var chunk = ChunkManager.Instance.GetChunk(e.WorldId, chunkPos);
             // 忽略通过特殊手段远程交互的情况
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
-            if (block == null) return;
+            if (block == null) {
+                LogManager.Instance.Debug($"方块居然不存在，坐标：{blockPos}");
+                return;
+            }
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
             // 触发打击事件
             EventBus.Instance.OnBlockHitEvent(new BlockHitEvent {
@@ -109,13 +114,21 @@ namespace Base.Events.Handler {
             });
             var rightTool = player.GetComponent<ToolInHand>().Right;
             // 忽略工具不对的情况
-            if (!rightTool.CanDig(block)) return;
+            if (!rightTool.CanDig(block)) {
+                LogManager.Instance.Debug("方块无法被当前工具挖掘");
+                return;
+            }
             // 忽略不可破坏方块
-            if (block.MaxDurability < 0) return;
+            if (block.MaxDurability < 0) {
+                LogManager.Instance.Debug("方块是无敌的");
+                return;
+            }
             block.Durability += 10;
+            LogManager.Instance.Debug($"方块耐久度：{block.MaxDurability - block.Durability}/{block.MaxDurability}");
             if (block.Durability > block.MaxDurability) {
                 // 挖掘成功，替换方块数据，并触发事件
                 chunk?.SetBlockCrossChunk(blockPos, new Air());
+                if (chunk != null) chunk.Version++;
                 EventBus.Instance.OnBlockBreakEvent(new BlockBreakEvent {
                     UserId = e.UserID,
                     Block = block,
@@ -123,6 +136,7 @@ namespace Base.Events.Handler {
                     ChunkPos = chunkPos,
                     WorldId = e.WorldId
                 });
+                LogManager.Instance.Debug("方块被破坏");
             }
 
             if (rightTool.MaxDurability > 0) {
