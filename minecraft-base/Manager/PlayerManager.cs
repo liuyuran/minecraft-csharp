@@ -18,5 +18,9 @@ namespace Base.Manager {
         public Entity? GetPlayer(string uuid) {
             return _playerLink.TryGetValue(uuid, out var player) ? player : null;
         }
+
+        public List<Entity> GetAllPlayer() {
+            return new List<Entity>(_playerLink.Values);
+        }
     }
 }

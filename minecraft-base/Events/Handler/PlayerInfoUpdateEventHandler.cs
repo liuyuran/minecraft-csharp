@@ -11,7 +11,6 @@ namespace Base.Events.Handler {
                 var transform = entity.GetComponent<Transform>();
                 transform.Position = playerInfo.Position;
                 transform.Forward = playerInfo.Forward;
-                entity.SetComponent(transform);
                 break;
             }
         }

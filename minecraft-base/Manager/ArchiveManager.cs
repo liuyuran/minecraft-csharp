@@ -2,11 +2,13 @@
 using System.IO;
 using System.Numerics;
 using Base.Blocks;
+using Base.Components;
 using Base.Const;
+using Base.Items;
 using Base.Utils;
 using ProtoBuf;
 using ProtoBuf.Meta;
-using Microsoft.Data.Sqlite;
+using Newtonsoft.Json.Linq;
 
 namespace Base.Manager {
     /// <summary>
@@ -48,7 +50,8 @@ namespace Base.Manager {
         }
 
         public void SaveArchive() {
-            // TODO 目前看只需要保存地形和生物信息
+            PlayerManager.Instance.GetAllPlayer().ForEach(SavePlayer);
+            LogManager.Instance.Debug("存档完成");
         }
 
         private void LoadSetting() { }
@@ -72,29 +75,69 @@ namespace Base.Manager {
             Serializer.Serialize(file, chunkData);
         }
 
-        public Entity? LoadPlayer(int worldId) {
-            return null;
+        public Entity LoadPlayer(string uuid, string nickname) {
+            var filename = $"{_archiveName}/player/{uuid}.json";
+            var player = EntityManager.Instance.Instantiate();
+            player.AddComponent(new Player {
+                Uuid = uuid,
+                LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                NickName = nickname
+            });
+
+            var defaultData = new JObject();
+            if (File.Exists(filename)) {
+                defaultData = JObject.Parse(File.ReadAllText(filename));
+            }
+
+            player.AddComponent(new Transform {
+                Position = new Vector3(
+                    (float)(defaultData.SelectToken("position.x") ?? 0),
+                    (float)(defaultData.SelectToken("position.y") ?? 0),
+                    (float)(defaultData.SelectToken("position.z") ?? 0)
+                ),
+                Forward = new Vector3(
+                    (float)(defaultData.SelectToken("forward.x") ?? 0),
+                    (float)(defaultData.SelectToken("forward.y") ?? 0),
+                    (float)(defaultData.SelectToken("forward.z") ?? 0)
+                )
+            });
+            player.AddComponent(new World {
+                WorldId = (int)(defaultData.SelectToken("worldId") ?? 0)
+            });
+            player.AddComponent<HealthData>();
+            player.AddComponent<Equipment>();
+            player.AddComponent(new Inventory {
+                Size = 32,
+                Items = new Item[32]
+            });
+            player.AddComponent<ToolInHand>();
+            return player;
         }
 
-        public void SavePlayer(Entity playerData) {
-            var connectionString = $"Data Source={_archiveName}/player/player.db";
-            using var connection = new SqliteConnection(connectionString);
-            connection.Open();
-            // Create the table
-            using (var command = connection.CreateCommand()) {
-                command.CommandText = "CREATE TABLE IF NOT EXISTS Player (Id INTEGER PRIMARY KEY, Name TEXT)";
-                command.ExecuteNonQuery();
-            }
-            using (var command = connection.CreateCommand()) {
-                command.CommandText = "update Player set Name = 'test' where Id = 1";
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
+        private void SavePlayer(Entity playerData) {
+            var playerId = playerData.GetComponent<Player>().Uuid;
+            var filename = $"{_archiveName}/player/{playerId}.json";
+            var res = new JObject {
+                ["uuid"] = playerId,
+                ["nickname"] = playerData.GetComponent<Player>().NickName,
+                // 世界、位置和朝向
+                ["worldId"] = playerData.GetComponent<World>().WorldId,
+                ["position"] = new JObject {
+                    ["x"] = playerData.GetComponent<Transform>().Position.X,
+                    ["y"] = playerData.GetComponent<Transform>().Position.Y,
+                    ["z"] = playerData.GetComponent<Transform>().Position.Z
+                },
+                ["forward"] = new JObject {
+                    ["x"] = playerData.GetComponent<Transform>().Forward.X,
+                    ["y"] = playerData.GetComponent<Transform>().Forward.Y,
+                    ["z"] = playerData.GetComponent<Transform>().Forward.Z
+                }
+            };
+            File.WriteAllText(filename, res.ToString());
         }
 
         private static string IntToHex(float value) {
-            return Convert.ToString((int) value, 16);
+            return Convert.ToString((int)value, 16);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Base;
 using Base.Components;
+using Base.Const;
 using Base.Events;
 using Base.Interface;
 using Base.Manager;
@@ -86,6 +87,8 @@ public class Tests {
             Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1)));
             Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2)));
         });
+        // 等待存档
+        Thread.Sleep((int)(ParamConst.AutoSaveInterval + 1000));
         // 登录后退出，检查位置是否成功存储
         SendEventToServer(new PlayerLogoutEvent());
         SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
