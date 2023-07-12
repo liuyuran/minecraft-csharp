@@ -42,7 +42,7 @@ public class Tests {
     }
 
     /// <summary>
-    /// 多用户登录，检查下发指令
+    /// 用户登录
     /// </summary>
     [Test, Order(1)]
     public void UserJoin() {
@@ -92,9 +92,72 @@ public class Tests {
         // 登录后退出，检查位置是否成功存储
         SendEventToServer(new PlayerLogoutEvent());
         SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
+        player = PlayerManager.Instance.GetPlayer(uuid);
+        Assert.That(player, Is.Not.Null);
+        if (player == null) return;
         Assert.Multiple(() => {
             Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1)));
             Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2)));
         });
+    }
+
+    /// <summary>
+    /// 自动掉线
+    /// </summary>
+    [Test, Order(3)]
+    public void AutoDisconnect() {
+        var uuid = CommandTransferManager.NetworkAdapter?.GetCurrentPlayerUuid();
+        Assert.That(uuid, Is.Not.Null);
+        if (uuid == null) return;
+        Thread.Sleep((int)(ParamConst.DisconnectTimeout + 1000));
+        var player = PlayerManager.Instance.GetPlayer(uuid);
+        Assert.That(player, Is.Null);
+    }
+
+    /// <summary>
+    /// 挖掘
+    /// </summary>
+    [Test, Order(4)]
+    public void Dig() { }
+    
+    /// <summary>
+    /// 液体流动
+    /// </summary>
+    [Test, Order(5)]
+    public void LiquidFlow() { }
+    
+    /// <summary>
+    /// 放置
+    /// </summary>
+    [Test, Order(6)]
+    public void PlaceBlock() { }
+    
+    /// <summary>
+    /// 交互
+    /// </summary>
+    [Test, Order(7)]
+    public void Action() { }
+
+    /// <summary>
+    /// 聊天
+    /// </summary>
+    [Test, Order(8)]
+    public void Chat() {
+        var uuid = CommandTransferManager.NetworkAdapter?.GetCurrentPlayerUuid();
+        Assert.That(uuid, Is.Not.Null);
+        if (uuid == null) return;
+        SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
+        var player = PlayerManager.Instance.GetPlayer(uuid);
+        Assert.That(player, Is.Not.Null);
+        if (player == null) return;
+        SendEventToServer(new ChatEvent { Message = "test" });
+        var haveChatMessage = false;
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            if (@event is not ChatEvent chatEvent) continue;
+            Assert.That(chatEvent.Message, Is.EqualTo($"[{NickName}]: test"));
+            haveChatMessage = true;
+            break;
+        }
+        Assert.That(haveChatMessage, Is.True);
     }
 }

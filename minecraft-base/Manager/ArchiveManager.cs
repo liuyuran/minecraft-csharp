@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using System.Threading;
 using Base.Blocks;
 using Base.Components;
 using Base.Const;
@@ -133,7 +134,14 @@ namespace Base.Manager {
                     ["z"] = playerData.GetComponent<Transform>().Forward.Z
                 }
             };
-            File.WriteAllText(filename, res.ToString());
+            for (var i = 1; i <= 3; i++) {
+                try {
+                    File.WriteAllText(filename, res.ToString());
+                    break;
+                } catch (IOException) {
+                    Thread.Sleep(100);
+                }
+            }
         }
 
         private static string IntToHex(float value) {
