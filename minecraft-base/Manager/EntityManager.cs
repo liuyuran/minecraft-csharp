@@ -19,8 +19,8 @@ namespace Base.Manager {
             return entity;
         }
         
-        public Entity[] QueryByComponents(params Type[] components) {
-            return (from entity in _entities let hasAllComponents = components.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
+        public IEnumerable<Entity> QueryByComponents(params Type[] components) {
+            return (from entity in _entities.ToArray() let hasAllComponents = components.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
         }
         
         public void Destroy(Entity entity) {
