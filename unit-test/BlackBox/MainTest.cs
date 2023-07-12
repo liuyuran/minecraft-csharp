@@ -1,11 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Base;
+using Base.Blocks;
 using Base.Components;
 using Base.Const;
 using Base.Events;
 using Base.Interface;
 using Base.Manager;
+using Base.Utils;
 
 namespace UnitTest.BlackBox;
 
@@ -99,6 +101,7 @@ public class Tests {
             Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1)));
             Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2)));
         });
+        SendEventToServer(new PlayerLogoutEvent());
     }
 
     /// <summary>
@@ -106,6 +109,7 @@ public class Tests {
     /// </summary>
     [Test, Order(3)]
     public void AutoDisconnect() {
+        SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
         var uuid = CommandTransferManager.NetworkAdapter?.GetCurrentPlayerUuid();
         Assert.That(uuid, Is.Not.Null);
         if (uuid == null) return;
@@ -118,7 +122,31 @@ public class Tests {
     /// 挖掘
     /// </summary>
     [Test, Order(4)]
-    public void Dig() { }
+    public void Dig() {
+        SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            // 只是为了清空一轮传输队列
+            if (@event is not ChunkUpdateEvent updateEvent) continue;
+            if (updateEvent.Chunk == null) continue;
+            if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Dirt().ID));
+        }
+        SendEventToServer(new BlockUpdateEvent {
+            ActionType = BlockUpdateEvent.ActionTypeEnum.Dig,
+            WorldId = 0,
+            ChunkPos = new Vector3(0, 0, -1),
+            BlockPos = new Vector3(0, 0, 0),
+            Direction = Direction.up,
+            Operand = ""
+        });
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            if (@event is not ChunkUpdateEvent updateEvent) continue;
+            if (updateEvent.Chunk == null) continue;
+            if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Air().ID));
+        }
+        SendEventToServer(new PlayerLogoutEvent());
+    }
     
     /// <summary>
     /// 液体流动

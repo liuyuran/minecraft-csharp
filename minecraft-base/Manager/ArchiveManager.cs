@@ -52,7 +52,6 @@ namespace Base.Manager {
 
         public void SaveArchive() {
             PlayerManager.Instance.GetAllPlayer().ForEach(SavePlayer);
-            LogManager.Instance.Debug("存档完成");
         }
 
         private void LoadSetting() { }
@@ -82,6 +81,7 @@ namespace Base.Manager {
             player.AddComponent(new Player {
                 Uuid = uuid,
                 LastSyncTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                LastControlTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 NickName = nickname
             });
 

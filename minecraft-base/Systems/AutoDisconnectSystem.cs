@@ -14,13 +14,15 @@ namespace Base.Systems {
 
         public override void OnUpdate() {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player))) {
-                var lastSync = entity.GetComponent<Player>().LastSyncTime;
+            var allPlayer = EntityManager.Instance.QueryByComponents(typeof(Player));
+            foreach (var entity in allPlayer) {
+                var lastSync = entity.GetComponent<Player>().LastControlTime;
                 if (now - lastSync < ParamConst.DisconnectTimeout) continue;
                 var player = entity.GetComponent<Player>();
                 var uuid = player.Uuid;
                 var nickname = player.NickName;
                 PlayerManager.Instance.RemovePlayer(uuid);
+                EntityManager.Instance.Destroy(entity);
                 LogManager.Instance.Warning($"玩家 {nickname} 由于长时间无交互被踢出游戏");
             }
         }
