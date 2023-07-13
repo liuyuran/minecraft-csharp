@@ -112,7 +112,7 @@ namespace Base.Events.Handler {
                 ChunkPos = chunkPos,
                 WorldId = e.WorldId
             });
-            var rightTool = player.GetComponent<ToolInHand>().Right;
+            var rightTool = player.GetComponent<ToolInHand>().RightHand;
             // 忽略工具不对的情况
             if (!rightTool.CanDig(block)) {
                 LogManager.Instance.Debug("方块无法被当前工具挖掘");
@@ -144,7 +144,7 @@ namespace Base.Events.Handler {
                 rightTool.Durability -= 1;
                 if (rightTool.Durability <= 0) {
                     // 工具破碎，替换为手
-                    player.GetComponent<ToolInHand>().Right = new Hand();
+                    player.GetComponent<ToolInHand>().RightHand = new Hand();
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Base.Events.Handler {
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
             if (block == null) return;
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
-            var rightTool = player.GetComponent<ToolInHand>().Right;
+            var rightTool = player.GetComponent<ToolInHand>().RightHand;
             EventBus.Instance.OnItemUsedEvent(new ItemUsedEvent {
                 UserId = e.UserID,
                 Block = block,

@@ -147,18 +147,56 @@ public class Tests {
         }
         SendEventToServer(new PlayerLogoutEvent());
     }
-    
+
     /// <summary>
-    /// 液体流动
+    /// 方块状态保存、掉落与拾取
     /// </summary>
     [Test, Order(5)]
-    public void LiquidFlow() { }
-    
+    public void SaveDropAndPick() {
+        SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            if (@event is not ChunkUpdateEvent updateEvent) continue;
+            if (updateEvent.Chunk == null) continue;
+            if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Air().ID));
+        }
+        // TODO 掉落与拾取
+    }
+
     /// <summary>
     /// 放置
     /// </summary>
     [Test, Order(6)]
-    public void PlaceBlock() { }
+    public void PlaceBlock() {
+        SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            // 只是为了清空一轮传输队列
+            if (@event is not ChunkUpdateEvent updateEvent) continue;
+            if (updateEvent.Chunk == null) continue;
+            if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Dirt().ID));
+        }
+        // TODO 得把泥土塞进背包里
+        SendEventToServer(new SwitchToolEvent {
+            isLeft = false,
+            InventorySlot = 0
+        });
+        SendEventToServer(new BlockUpdateEvent {
+            ActionType = BlockUpdateEvent.ActionTypeEnum.Active,
+            WorldId = 0,
+            ChunkPos = new Vector3(0, 0, -1),
+            BlockPos = new Vector3(0, 0, 0),
+            Direction = Direction.up,
+            Operand = ""
+        });
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+            if (@event is not ChunkUpdateEvent updateEvent) continue;
+            if (updateEvent.Chunk == null) continue;
+            if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 1).ID, Is.EqualTo(new Dirt().ID));
+        }
+        SendEventToServer(new PlayerLogoutEvent());
+    }
     
     /// <summary>
     /// 交互
