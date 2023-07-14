@@ -19,7 +19,7 @@ public class Tests {
     private Thread? _serverThread;
     private const string NickName = "test1";
 
-    [SetUp]
+    [OneTimeSetUp]
     public void Setup() {
         // 启动前清理存档文件
         var assemblyDirectory = $"{TestContext.CurrentContext.TestDirectory}/worlds";
@@ -33,7 +33,7 @@ public class Tests {
         Thread.Sleep(500);
     }
 
-    [TearDown]
+    [OneTimeTearDown]
     public void Cleanup() {
         Game.Stop();
     }

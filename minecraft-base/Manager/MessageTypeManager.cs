@@ -47,6 +47,7 @@ namespace Base.Manager {
         
         public void FireEvent(GameEvent gameEvent) {
             var type = gameEvent.GetType();
+            LogManager.Instance.Debug(type.FullName ?? "unknown event");
             if (!_handlers.ContainsKey(type)) return;
             for (var index = 0; index < _handlers[type].Count; index++) {
                 var handler = _handlers[type][index];

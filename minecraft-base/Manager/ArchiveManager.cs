@@ -1,38 +1,76 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Reflection;
 using System.Threading;
 using Base.Blocks;
 using Base.Components;
 using Base.Const;
+using Base.Interface;
 using Base.Items;
 using Base.Utils;
-using ProtoBuf;
-using ProtoBuf.Meta;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Base.Manager {
+    public class ItemConverter : JsonConverter {
+        private readonly IDictionary<string, Type> _itemMapping;
+        
+        public ItemConverter(IDictionary<string, Type> typeItemMapping) {
+            _itemMapping = typeItemMapping;
+        }
+        
+        private static readonly JsonSerializerSettings SpecifiedSubclassConversion =
+            new() { ContractResolver = new DefaultContractResolver() };
+
+        public override bool CanConvert(Type objectType) {
+            return objectType == typeof(Item);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue,
+            JsonSerializer serializer) {
+            var jo = JObject.Load(reader);
+            var itemId = (jo["ID"] ?? "").Value<string>() ?? "";
+            if (!_itemMapping.ContainsKey(itemId)) throw new Exception($"方块{itemId}已经无法找到");
+            var type = _itemMapping[itemId];
+            var result = JsonConvert.DeserializeObject(jo.ToString(), type, SpecifiedSubclassConversion);
+            return result ?? throw new Exception($"方块{itemId}反序列化失败");
+        }
+
+        public override bool CanWrite => false;
+
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) {
+            throw new NotImplementedException(); // won't be called because CanWrite returns false
+        }
+    }
+    
     /// <summary>
     /// 存档管理器
     /// </summary>
     public class ArchiveManager {
         public static ArchiveManager Instance { get; } = new();
+        private readonly IDictionary<string, Type> _itemDict = new Dictionary<string, Type>();
+        
         private string _archiveName = "default";
-
+        
         private ArchiveManager() {
-            RuntimeTypeModel.Default
-                .Add(typeof(Vector3), false)
-                .Add("X", "Y", "Z");
-            var subTypeDefine = RuntimeTypeModel.Default
-                .Add(typeof(Block));
-            var assem = typeof(Block).Assembly;
-            var baseType = typeof(Block);
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var assem = typeof(Item).Assembly;
+            var baseType = typeof(Item);
             var types = assem.GetExportedTypes();
-            for (var index = 0; index < types.Length; index++) {
-                var type = types[index];
+            foreach (var type in types) {
                 if (type.IsAbstract || type.FullName == null) continue;
                 if (!type.IsSubclassOf(baseType)) continue;
-                subTypeDefine.AddSubType(index + 1, type);
+                if (assem.CreateInstance(
+                        type.FullName, false,
+                        BindingFlags.ExactBinding,
+                        null, new object[] { }, null, null
+                    ) is not Item instance) continue;
+                _itemDict.Add(instance.ID, type);
             }
         }
 
@@ -59,20 +97,34 @@ namespace Base.Manager {
         private void SaveSetting() { }
 
         public Chunk? LoadChunk(int worldId, Vector3 pos) {
-            var path = $"{_archiveName}/chunk/{worldId}/";
-            if (!Directory.Exists(path)) return null;
-            var filename = $"{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.bin";
-            if (!File.Exists($"{path}/{filename}")) return null;
-            using var file = File.OpenRead($"{path}/{filename}");
-            var chunk = Serializer.Deserialize<Chunk>(file);
+            var filename = $"{_archiveName}/chunk/{worldId}/{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.json";
+            if (!File.Exists(filename)) {
+                return null;
+            }
+            var jsonData = JObject.Parse(File.ReadAllText(filename));
+            var chunk = new Chunk {
+                BlockData = jsonData.SelectToken("BlockData")?.ToObject<Block[]>() ?? Array.Empty<Block>(),
+                WorldId = (int)(jsonData.SelectToken("WorldId") ?? 0),
+                Position = jsonData.SelectToken("Position")?.ToObject<Vector3>() ?? Vector3.Zero,
+                Version = (int)(jsonData.SelectToken("Version") ?? 0),
+                IsEmpty = (bool)(jsonData.SelectToken("IsEmpty") ?? false)
+            };
             return chunk;
         }
 
         public void SaveChunk(int worldId, Vector3 pos, Chunk chunkData) {
+            // 是的我知道用json会让存档变得很大，但是二进制存储的兼容性想做的很好难度颇高，日后等大神实现吧，我不想努力了
             var path = $"{_archiveName}/chunk/{worldId}/";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            using var file = File.Create($"{path}/{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.bin");
-            Serializer.Serialize(file, chunkData);
+            var data = new JObject {
+                ["BlockData"] = JToken.FromObject(chunkData.BlockData),
+                ["WorldId"] = chunkData.WorldId,
+                ["Position"] = JToken.FromObject(chunkData.Position),
+                ["Version"] = chunkData.Version,
+                ["IsEmpty"] = chunkData.IsEmpty
+            };
+            var filename = $"{path}/{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.json";
+            File.WriteAllText(filename, data.ToString());
         }
 
         public Entity LoadPlayer(string uuid, string nickname) {
@@ -145,7 +197,7 @@ namespace Base.Manager {
         }
 
         private static string IntToHex(float value) {
-            return Convert.ToString((int)value, 16);
+            return Convert.ToString((int)value, 16).PadLeft(16, '0');
         }
     }
 }

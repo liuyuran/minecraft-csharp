@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using Base.Blocks;
+using Newtonsoft.Json;
 using ProtoBuf;
 
 namespace Base.Items {
-    [ProtoContract]
     public abstract class Item {
         public virtual string ID => ""; // 物品id
+        [JsonIgnore]
         public virtual string Icon => ""; // 物品图标
+        [JsonIgnore]
         public virtual string Name => ""; // 物品名称
+        [JsonIgnore]
         public virtual string Description => ""; // 物品描述
+        [JsonIgnore]
         public virtual int ItemType => (int)Enums.ItemType.None; // 物品类型
+        [JsonIgnore]
         public virtual int MaxDurability => -1; // 最大耐久
-        [ProtoMember(1)]
         public int Durability = -1; // 当前耐久
-        [ProtoMember(2)]
         public IDictionary<string, string> Meta = new Dictionary<string, string>(); // 扩展数据
 
         /// <summary>

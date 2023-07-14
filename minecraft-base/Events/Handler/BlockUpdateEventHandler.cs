@@ -24,7 +24,7 @@ namespace Base.Events.Handler {
                     if (loot > dropItem.Weight) continue;
                     var item = EntityManager.Instance.Instantiate();
                     item.AddComponent(new DroppedItem {
-                        ItemID = dropItem.Item.ID,
+                        ItemID = dropItem.Item,
                         Count = dropItem.DropCount,
                         Meta = dropItem.Meta 
                     });
@@ -99,11 +99,9 @@ namespace Base.Events.Handler {
             var chunk = ChunkManager.Instance.GetChunk(e.WorldId, chunkPos);
             // 忽略通过特殊手段远程交互的情况
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
-            if (block == null) {
-                LogManager.Instance.Debug($"方块居然不存在，坐标：{blockPos}");
-                return;
-            }
+            if (block == null) return;
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
+            if (player == null) return;
             // 触发打击事件
             EventBus.Instance.OnBlockHitEvent(new BlockHitEvent {
                 UserId = e.UserID,
@@ -158,6 +156,7 @@ namespace Base.Events.Handler {
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
             if (block == null) return;
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
+            if (player == null) return;
             var rightTool = player.GetComponent<ToolInHand>().RightHand;
             EventBus.Instance.OnItemUsedEvent(new ItemUsedEvent {
                 UserId = e.UserID,
