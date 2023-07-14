@@ -52,6 +52,7 @@ namespace Base.Manager {
     public class ArchiveManager {
         public static ArchiveManager Instance { get; } = new();
         private readonly IDictionary<string, Type> _itemDict = new Dictionary<string, Type>();
+        private readonly ItemConverter _converter;
         
         private string _archiveName = "default";
         
@@ -72,6 +73,8 @@ namespace Base.Manager {
                     ) is not Item instance) continue;
                 _itemDict.Add(instance.ID, type);
             }
+
+            _converter = new ItemConverter(_itemDict);
         }
 
         public void LoadArchive(string worldName) {
@@ -103,7 +106,7 @@ namespace Base.Manager {
             }
             var jsonData = JObject.Parse(File.ReadAllText(filename));
             var chunk = new Chunk {
-                BlockData = jsonData.SelectToken("BlockData")?.ToObject<Block[]>() ?? Array.Empty<Block>(),
+                BlockData = jsonData.SelectToken("BlockData")?.ToObject<Block[]>(_converter) ?? Array.Empty<Block>(),
                 WorldId = (int)(jsonData.SelectToken("WorldId") ?? 0),
                 Position = jsonData.SelectToken("Position")?.ToObject<Vector3>() ?? Vector3.Zero,
                 Version = (int)(jsonData.SelectToken("Version") ?? 0),

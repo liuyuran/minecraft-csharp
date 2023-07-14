@@ -5,6 +5,8 @@ using Base.Blocks;
 using Base.Components;
 using Base.Const;
 using Base.Events;
+using Base.Events.ClientEvent;
+using Base.Events.ServerEvent;
 using Base.Interface;
 using Base.Manager;
 using Base.Utils;
@@ -154,12 +156,24 @@ public class Tests {
     [Test, Order(5)]
     public void SaveDropAndPick() {
         SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
-        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false) {
+        string? itemId = null;
+        while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false)
+        {
             if (@event is not ChunkUpdateEvent updateEvent) continue;
             if (updateEvent.Chunk == null) continue;
             if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
-            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Air().ID));
+            Assert.Multiple(() =>
+            {
+                Assert.That(updateEvent.Chunk.GetBlock(0, 0, 0).ID, Is.EqualTo(new Air().ID));
+                Assert.That(updateEvent.Items, Has.Count.EqualTo(1));
+            });
+            itemId = updateEvent.Items.Values.First().ItemID;
         }
+        Assert.That(itemId, Is.Not.Null);
+        if (itemId == null) return;
+        SendEventToServer(new PickUpEvent {
+            ItemId = itemId
+        });
         // TODO 掉落与拾取
     }
 

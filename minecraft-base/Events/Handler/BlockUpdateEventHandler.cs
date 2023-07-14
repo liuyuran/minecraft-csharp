@@ -4,6 +4,7 @@ using Base.Blocks;
 using Base.Components;
 using Base.Const;
 using Base.Enums;
+using Base.Events.ClientEvent;
 using Base.Events.InnerBus;
 using Base.Interface;
 using Base.Items;
@@ -137,13 +138,12 @@ namespace Base.Events.Handler {
                 LogManager.Instance.Debug("方块被破坏");
             }
 
-            if (rightTool.MaxDurability > 0) {
-                // 如果工具有耐久度，减少耐久度
-                rightTool.Durability -= 1;
-                if (rightTool.Durability <= 0) {
-                    // 工具破碎，替换为手
-                    player.GetComponent<ToolInHand>().RightHand = new Hand();
-                }
+            if (rightTool.MaxDurability <= 0) return;
+            // 如果工具有耐久度，减少耐久度
+            rightTool.Durability -= 1;
+            if (rightTool.Durability <= 0) {
+                // 工具破碎，替换为手
+                player.GetComponent<ToolInHand>().RightHand = new Hand();
             }
         }
 
