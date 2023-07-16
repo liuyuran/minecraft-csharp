@@ -7,7 +7,6 @@ using System.Threading;
 using Base.Blocks;
 using Base.Components;
 using Base.Const;
-using Base.Interface;
 using Base.Items;
 using Base.Utils;
 using Newtonsoft.Json;
@@ -15,44 +14,12 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Base.Manager {
-    public class ItemConverter : JsonConverter {
-        private readonly IDictionary<string, Type> _itemMapping;
-        
-        public ItemConverter(IDictionary<string, Type> typeItemMapping) {
-            _itemMapping = typeItemMapping;
-        }
-        
-        private static readonly JsonSerializerSettings SpecifiedSubclassConversion =
-            new() { ContractResolver = new DefaultContractResolver() };
-
-        public override bool CanConvert(Type objectType) {
-            return objectType == typeof(Item);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue,
-            JsonSerializer serializer) {
-            var jo = JObject.Load(reader);
-            var itemId = (jo["ID"] ?? "").Value<string>() ?? "";
-            if (!_itemMapping.ContainsKey(itemId)) throw new Exception($"方块{itemId}已经无法找到");
-            var type = _itemMapping[itemId];
-            var result = JsonConvert.DeserializeObject(jo.ToString(), type, SpecifiedSubclassConversion);
-            return result ?? throw new Exception($"方块{itemId}反序列化失败");
-        }
-
-        public override bool CanWrite => false;
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) {
-            throw new NotImplementedException(); // won't be called because CanWrite returns false
-        }
-    }
-    
     /// <summary>
     /// 存档管理器
     /// </summary>
     public class ArchiveManager {
         public static ArchiveManager Instance { get; } = new();
-        private readonly IDictionary<string, Type> _itemDict = new Dictionary<string, Type>();
-        private readonly ItemConverter _converter;
+        public readonly IDictionary<string, Type> ItemDict = new Dictionary<string, Type>();
         
         private string _archiveName = "default";
         
@@ -71,10 +38,8 @@ namespace Base.Manager {
                         BindingFlags.ExactBinding,
                         null, new object[] { }, null, null
                     ) is not Item instance) continue;
-                _itemDict.Add(instance.ID, type);
+                ItemDict.Add(instance.ID, type);
             }
-
-            _converter = new ItemConverter(_itemDict);
         }
 
         public void LoadArchive(string worldName) {
@@ -105,11 +70,21 @@ namespace Base.Manager {
                 return null;
             }
             var jsonData = JObject.Parse(File.ReadAllText(filename));
+            var blockData = (JArray)(jsonData.SelectToken("BlockData") ?? new JArray());
+            var blockList = new Block[blockData.Count];
+            for (var index = 0; index < blockData.Count; index++) {
+                var item = blockData[index];
+                var type = ItemDict[item.SelectToken("id")?.ToString() ?? ""];
+                var block = item.ToObject(type);
+                if (block is not Block blockInstance) continue;
+                blockList[index] = blockInstance;
+            }
+
             var chunk = new Chunk {
-                BlockData = jsonData.SelectToken("BlockData")?.ToObject<Block[]>(_converter) ?? Array.Empty<Block>(),
+                BlockData = blockList,
                 WorldId = (int)(jsonData.SelectToken("WorldId") ?? 0),
                 Position = jsonData.SelectToken("Position")?.ToObject<Vector3>() ?? Vector3.Zero,
-                Version = (int)(jsonData.SelectToken("Version") ?? 0),
+                Version = (long)(jsonData.SelectToken("Version") ?? 0),
                 IsEmpty = (bool)(jsonData.SelectToken("IsEmpty") ?? false)
             };
             return chunk;
