@@ -2,6 +2,6 @@
 
 namespace Base.Events.ClientEvent {
     public class PickUpEvent: GameEvent {
-        public string ItemId;
+        public string ItemId = "";
     }
 }
