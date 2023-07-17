@@ -37,6 +37,9 @@ namespace Base.Events.Handler {
                             @event.ChunkPos.Z * ParamConst.ChunkSize + @event.BlockPos.Z
                         )
                     });
+                    var chunk = ChunkManager.Instance.GetChunk(@event.WorldId, @event.ChunkPos);
+                    if (chunk == null) continue;
+                    chunk.Version++;
                 }
             };
             EventBus.Instance.ItemUsedEvent += @event => {

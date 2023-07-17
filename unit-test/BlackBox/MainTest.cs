@@ -157,6 +157,7 @@ public class Tests {
     public void SaveDropAndPick() {
         SendEventToServer(new PlayerJoinEvent { Nickname = NickName });
         string? itemId = null;
+        Thread.Sleep(1000);
         while (CommandTransferManager.NetworkAdapter?.TryGetFromServer(out var @event) ?? false)
         {
             if (@event is not ChunkUpdateEvent updateEvent) continue;
@@ -174,7 +175,15 @@ public class Tests {
         SendEventToServer(new PickUpEvent {
             ItemId = itemId
         });
-        // TODO 掉落与拾取
+        var uuid = CommandTransferManager.NetworkAdapter?.GetCurrentPlayerUuid();
+        Assert.That(uuid, Is.Not.Null);
+        if (uuid == null) return;
+        var player = PlayerManager.Instance.GetPlayer(uuid);
+        Assert.That(player, Is.Not.Null);
+        if (player == null) return;
+        var data = player.GetComponent<Inventory>();
+        Assert.That(data.Items[0], Is.Not.Null);
+        SendEventToServer(new PlayerLogoutEvent());
     }
 
     /// <summary>
@@ -188,9 +197,8 @@ public class Tests {
             if (@event is not ChunkUpdateEvent updateEvent) continue;
             if (updateEvent.Chunk == null) continue;
             if (updateEvent.Chunk.Position != new Vector3(0, 0, -1)) continue;
-            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Dirt().ID));
+            Assert.That(updateEvent.Chunk.GetBlock(0 , 0, 0).ID, Is.EqualTo(new Air().ID));
         }
-        // TODO 得把泥土塞进背包里
         SendEventToServer(new SwitchToolEvent {
             isLeft = false,
             InventorySlot = 0
