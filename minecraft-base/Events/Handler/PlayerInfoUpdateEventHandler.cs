@@ -1,4 +1,5 @@
-﻿using Base.Components;
+﻿using System;
+using Base.Components;
 using Base.Events.ClientEvent;
 using Base.Interface;
 using Base.Manager;
@@ -11,6 +12,7 @@ namespace Base.Events.Handler {
             var transform = player.GetComponent<Transform>();
             transform.Position = playerInfo.Position;
             transform.Forward = playerInfo.Forward;
+            player.GetComponent<Player>().LastControlTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
     }
 }
