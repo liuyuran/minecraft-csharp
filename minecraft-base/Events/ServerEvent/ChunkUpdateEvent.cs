@@ -7,6 +7,6 @@ using Base.Utils;
 namespace Base.Events.ServerEvent {
     public class ChunkUpdateEvent: GameEvent {
         public Chunk? Chunk = null;
-        public Dictionary<Vector3, DroppedItem> Items = new();
+        public Dictionary<Vector3, List<DroppedItem>> Items = new();
     }
 }

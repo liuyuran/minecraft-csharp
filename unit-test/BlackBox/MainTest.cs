@@ -168,7 +168,7 @@ public class Tests {
                 Assert.That(updateEvent.Chunk.GetBlock(0, 0, 0).ID, Is.EqualTo(new Air().ID));
                 Assert.That(updateEvent.Items, Has.Count.EqualTo(1));
             });
-            itemId = updateEvent.Items.Values.First().ItemID;
+            itemId = updateEvent.Items.Values.First().First().ItemID;
         }
         Assert.That(itemId, Is.Not.Null);
         if (itemId == null) return;
