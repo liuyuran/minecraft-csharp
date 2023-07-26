@@ -32,8 +32,8 @@ namespace Base {
             _isRunning = true;
             LogManager.Instance.Info("服务器启动中，请稍等...");
             // 初始化mod管理器
-            ModManager.Instance.LoadAllMod();
-            LogManager.Instance.Info("扩展模组加载完成");
+            ModManager.Instance.ScanAllMod();
+            LogManager.Instance.Info("扩展模组扫描完成");
             // 设定网络模式
             CommandTransferManager.Init(adapter);
             LogManager.Instance.Info("初始化网络适配器完成");

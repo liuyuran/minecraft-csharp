@@ -10,6 +10,7 @@ namespace Base.Mods {
     /// </summary>
     public class Mod {
         public bool Loaded { get; private set; }
+        public string ID { get; private set; }
         public string Name { get; private set; }
         private string DllPath { get; }
         private string EntryPoint { get; }
@@ -18,6 +19,7 @@ namespace Base.Mods {
         public Mod(string modPath) {
             try {
                 var jsonData = JObject.Parse(File.ReadAllText($"{modPath}/mod.json"));
+                ID = jsonData["id"]?.ToString() ?? string.Empty;
                 Name = jsonData["name"]?.ToString() ?? string.Empty;
                 DllPath = $"{modPath}/{jsonData["dll"]}";
                 EntryPoint = jsonData["entryPoint"]?.ToString() ?? string.Empty;
