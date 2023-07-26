@@ -13,6 +13,10 @@ namespace Base.NetworkAdapters {
             _clientEventQueue.Clear();
         }
 
+        public string GetCurrentPlayerUuid() {
+            return _localUserId;
+        }
+
         public void SendToServer<T>(T message) where T : GameEvent {
             message.UserID = _localUserId;
             _serverEventQueue.Enqueue(message);

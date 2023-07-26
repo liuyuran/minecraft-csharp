@@ -4,6 +4,7 @@ using Base.Blocks;
 using Base.Components;
 using Base.Const;
 using Base.Enums;
+using Base.Events.ClientEvent;
 using Base.Events.InnerBus;
 using Base.Interface;
 using Base.Items;
@@ -24,7 +25,7 @@ namespace Base.Events.Handler {
                     if (loot > dropItem.Weight) continue;
                     var item = EntityManager.Instance.Instantiate();
                     item.AddComponent(new DroppedItem {
-                        ItemID = dropItem.Item.ID,
+                        ItemID = dropItem.Item,
                         Count = dropItem.DropCount,
                         Meta = dropItem.Meta 
                     });
@@ -36,6 +37,9 @@ namespace Base.Events.Handler {
                             @event.ChunkPos.Z * ParamConst.ChunkSize + @event.BlockPos.Z
                         )
                     });
+                    var chunk = ChunkManager.Instance.GetChunk(@event.WorldId, @event.ChunkPos);
+                    if (chunk == null) continue;
+                    chunk.Version++;
                 }
             };
             EventBus.Instance.ItemUsedEvent += @event => {
@@ -79,10 +83,12 @@ namespace Base.Events.Handler {
             switch (e.ActionType) {
                 case BlockUpdateEvent.ActionTypeEnum.Dig:
                     // 破坏方块
+                    LogManager.Instance.Debug("收到挖掘事件");
                     DigAction(e);
                     break;
                 case BlockUpdateEvent.ActionTypeEnum.Active:
                     // 使用手中的工具，或激活方块
+                    LogManager.Instance.Debug("收到激活事件");
                     ActiveAction(e);
                     break;
                 default:
@@ -99,6 +105,7 @@ namespace Base.Events.Handler {
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
             if (block == null) return;
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
+            if (player == null) return;
             // 触发打击事件
             EventBus.Instance.OnBlockHitEvent(new BlockHitEvent {
                 UserId = e.UserID,
@@ -107,15 +114,23 @@ namespace Base.Events.Handler {
                 ChunkPos = chunkPos,
                 WorldId = e.WorldId
             });
-            var rightTool = player.GetComponent<ToolInHand>().Right;
+            var rightTool = player.GetComponent<ToolInHand>().RightHand;
             // 忽略工具不对的情况
-            if (!rightTool.CanDig(block)) return;
+            if (!rightTool.CanDig(block)) {
+                LogManager.Instance.Debug("方块无法被当前工具挖掘");
+                return;
+            }
             // 忽略不可破坏方块
-            if (block.MaxDurability < 0) return;
+            if (block.MaxDurability < 0) {
+                LogManager.Instance.Debug("方块是无敌的");
+                return;
+            }
             block.Durability += 10;
+            LogManager.Instance.Debug($"方块耐久度：{block.MaxDurability - block.Durability}/{block.MaxDurability}");
             if (block.Durability > block.MaxDurability) {
                 // 挖掘成功，替换方块数据，并触发事件
                 chunk?.SetBlockCrossChunk(blockPos, new Air());
+                if (chunk != null) chunk.Version++;
                 EventBus.Instance.OnBlockBreakEvent(new BlockBreakEvent {
                     UserId = e.UserID,
                     Block = block,
@@ -123,15 +138,15 @@ namespace Base.Events.Handler {
                     ChunkPos = chunkPos,
                     WorldId = e.WorldId
                 });
+                LogManager.Instance.Debug("方块被破坏");
             }
 
-            if (rightTool.MaxDurability > 0) {
-                // 如果工具有耐久度，减少耐久度
-                rightTool.Durability -= 1;
-                if (rightTool.Durability <= 0) {
-                    // 工具破碎，替换为手
-                    player.GetComponent<ToolInHand>().Right = new Hand();
-                }
+            if (rightTool.MaxDurability <= 0) return;
+            // 如果工具有耐久度，减少耐久度
+            rightTool.Durability -= 1;
+            if (rightTool.Durability <= 0) {
+                // 工具破碎，替换为手
+                player.GetComponent<ToolInHand>().RightHand = new Hand();
             }
         }
 
@@ -144,7 +159,8 @@ namespace Base.Events.Handler {
             var block = chunk?.GetBlockCrossChunk((int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z);
             if (block == null) return;
             var player = PlayerManager.Instance.GetPlayer(e.UserID);
-            var rightTool = player.GetComponent<ToolInHand>().Right;
+            if (player == null) return;
+            var rightTool = player.GetComponent<ToolInHand>().RightHand;
             EventBus.Instance.OnItemUsedEvent(new ItemUsedEvent {
                 UserId = e.UserID,
                 Block = block,

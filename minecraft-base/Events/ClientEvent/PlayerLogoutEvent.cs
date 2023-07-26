@@ -1,6 +1,6 @@
 ﻿using Base.Interface;
 
-namespace Base.Events {
+namespace Base.Events.ClientEvent {
     public class PlayerLogoutEvent: GameEvent {
         
     }

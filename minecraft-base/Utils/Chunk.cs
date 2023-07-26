@@ -8,7 +8,6 @@ using ProtoBuf;
 
 namespace Base.Utils {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [ProtoContract(SkipConstructor=true)]
     public sealed class Chunk {
         // 六个面的可见性掩码
         public const int Left = 0b1;
@@ -18,19 +17,14 @@ namespace Base.Utils {
         public const int Front = 0b10000;
         public const int Back = 0b100000;
 
-        [ProtoMember(1)]
-        private readonly Block[] _blockData = new Block[ParamConst.ChunkSize * ParamConst.ChunkSize * ParamConst.ChunkSize];
-        [ProtoMember(2)]
+        public Block[] BlockData = new Block[ParamConst.ChunkSize * ParamConst.ChunkSize * ParamConst.ChunkSize];
         public long Version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        [ProtoMember(3)]
         public int WorldId;
-        [ProtoMember(4)]
         public Vector3 Position;
-        [ProtoMember(5)]
         public bool IsEmpty;
 
         public Block GetBlock(int x, int y, int z) {
-            return _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
+            return BlockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
         }
         
         public void SetBlock(int x, int y, int z, Block block) {
@@ -93,7 +87,7 @@ namespace Base.Utils {
                 }
             }
             block.RenderFlags = r;
-            _blockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z] = block;
+            BlockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z] = block;
         }
 
         public Block? GetBlockCrossChunk(int x, int y, int z) {

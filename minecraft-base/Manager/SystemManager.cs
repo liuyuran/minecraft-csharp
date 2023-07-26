@@ -8,7 +8,7 @@ namespace Base.Manager {
     /// 系统管理器，用来从代码层面注册并启动各类系统
     /// </summary>
     public static class SystemManager {
-        private static readonly List<Interface.SystemBase> Systems = new();
+        private static readonly List<SystemBase> Systems = new();
 
         public static void Initialize() {
             var assem = typeof(SystemBase).Assembly;
@@ -32,7 +32,8 @@ namespace Base.Manager {
         }
 
         public static void Update() {
-            foreach (var system in Systems.Where(system => system.Enabled)) {
+            var systems = Systems.Where(system => system.Enabled).ToArray();
+            foreach (var system in systems) {
                 system.OnUpdate();
             }
         }

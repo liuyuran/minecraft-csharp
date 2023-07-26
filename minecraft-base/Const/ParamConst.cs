@@ -19,11 +19,11 @@
         /// <summary>
         /// 掉线延时
         /// </summary>
-        public const long DisconnectTimeout = 5000;
+        public const long DisconnectTimeout = 10000;
         /// <summary>
         /// 自动存档间隔
         /// </summary>
-        public const long AutoSaveInterval = 10000;
+        public const long AutoSaveInterval = 5000;
         /// <summary>
         /// 区块自动卸载延时
         /// </summary>

@@ -14,5 +14,6 @@ Hope politics never kill my dreams.
 ## project structure
 
 - `minecraft-base` public code
-- `minecraft-unity` client code
-- `minecraft-server` server code
+- `minecraft-unity` client code, base on unity
+- `minecraft-server` server code, include command line program code or test code in early level
+- `unit-test` test code, files too many now, but I'm not genius, so must continue base on TDD

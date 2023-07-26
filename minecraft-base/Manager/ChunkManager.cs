@@ -42,7 +42,6 @@ namespace Base.Manager {
                     _mChunkData[worldId].Add(position, ChunkGenerator.GenerateUnderGroundChunk(worldId, position));
                     break;
             }
-            _mChunkData[worldId][position].Position = position;
         }
         
         /// <summary>

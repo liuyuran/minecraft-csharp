@@ -14,6 +14,10 @@ namespace Base.Components {
         /// </summary>
         public long LastSyncTime;
         /// <summary>
+        /// 最后请求时间
+        /// </summary>
+        public long LastControlTime;
+        /// <summary>
         /// 角色显示名称
         /// </summary>
         public string NickName = "";

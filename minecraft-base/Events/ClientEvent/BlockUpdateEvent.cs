@@ -3,7 +3,7 @@ using System.Numerics;
 using Base.Interface;
 using Base.Utils;
 
-namespace Base.Events {
+namespace Base.Events.ClientEvent {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     [SuppressMessage("ReSharper", "ConvertToConstant.Global")]

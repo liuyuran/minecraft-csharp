@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Numerics;
 using Base.Components;
@@ -11,7 +12,7 @@ namespace Base.Systems {
     /// 区块生成系统
     /// </summary>
     public class ChunkGenerateSystem : SystemBase {
-        private readonly Dictionary<Vector3, long> _activeChunks = new();
+        private readonly ConcurrentDictionary<Vector3, long> _activeChunks = new();
 
         public override void OnCreate() {
             //
@@ -43,7 +44,7 @@ namespace Base.Systems {
                 }
             }
             foreach (var pos in removeList) {
-                _activeChunks.Remove(pos);
+                _activeChunks.Remove(pos, out _);
                 ChunkManager.Instance.UnloadChunk(0, pos);
             }
         }

@@ -8,6 +8,6 @@ namespace Base.Events.InnerBus {
         public Block Block;
         public Vector3 BlockPos;
         public Vector3 ChunkPos;
-        public long WorldId;
+        public int WorldId;
     }
 }
