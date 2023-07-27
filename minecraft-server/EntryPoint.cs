@@ -25,6 +25,7 @@ internal static class EntryPoint {
             break;
         }
 
+        ModManager.Instance.LoadAllMod();
         MessageTypeManager.Instance.FireEvent(new ChatEvent {
             Message = ""
         });

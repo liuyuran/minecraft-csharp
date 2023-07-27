@@ -70,3 +70,5 @@ minecraft-base/bin/
 *.meta
 unit-test/obj/
 unit-test/bin/
+mod-classic/obj/
+mod-classic/bin/

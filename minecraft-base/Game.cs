@@ -8,7 +8,7 @@ namespace Base {
     /// 游戏服务器核心逻辑循环入口类
     /// </summary>
     public static class Game {
-        private static bool _isRunning = false; 
+        private static bool _isRunning; 
         
         /// <summary>
         /// 以本地适配器模式启动服务器

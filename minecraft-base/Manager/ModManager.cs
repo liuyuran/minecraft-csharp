@@ -24,9 +24,9 @@ namespace Base.Manager {
             var modFiles = Directory.GetDirectories(ModPath);
             foreach (var modFile in modFiles) {
                 try {
-                    var mod = new Mod($"{ModPath}/{modFile}");
+                    var mod = new Mod(modFile);
                     ModList.Add(mod.ID, mod);
-                } catch (ModLoadException e) {
+                } catch (ModLoadException) {
                     // ignored
                 }
             }

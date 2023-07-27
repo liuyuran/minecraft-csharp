@@ -22,7 +22,7 @@ namespace Base.Mods {
                 ID = jsonData["id"]?.ToString() ?? string.Empty;
                 Name = jsonData["name"]?.ToString() ?? string.Empty;
                 DllPath = $"{modPath}/{jsonData["dll"]}";
-                EntryPoint = jsonData["entryPoint"]?.ToString() ?? string.Empty;
+                EntryPoint = jsonData["entrypoint"]?.ToString() ?? string.Empty;
                 var dll = Assembly.LoadFrom(DllPath);
                 var modType = dll.GetType(EntryPoint);
                 var mod = Activator.CreateInstance(modType);
