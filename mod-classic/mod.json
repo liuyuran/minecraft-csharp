@@ -1,0 +1,6 @@
+{
+  "id": "classic",
+  "name": "classic_name",
+  "dll": "mod-classic.dll",
+  "entrypoint": "mod_classic.EntryPoint"
+}
