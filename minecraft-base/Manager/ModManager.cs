@@ -20,7 +20,8 @@ namespace Base.Manager {
             if (!Directory.Exists(ModPath)) {
                 Directory.CreateDirectory(ModPath);
             }
-
+            
+            ModList.Clear();
             var modFiles = Directory.GetDirectories(ModPath);
             foreach (var modFile in modFiles) {
                 try {
