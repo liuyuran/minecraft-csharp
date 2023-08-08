@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Numerics;
 using Base.Components;
 using Base.Const;
 using Base.Interface;
 using Base.Manager;
+using Base.Utils;
 
 namespace Base.Systems {
     /// <summary>
@@ -22,7 +22,7 @@ namespace Base.Systems {
             var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             // 将玩家周围的区块生成并激活
             foreach (var entity in EntityManager.Instance.QueryByComponents(typeof(Player), typeof(Transform))) {
-                var position = entity.GetComponent<Transform>().Position + new Vector3();
+                var position = new Vector3(entity.GetComponent<Transform>().Position);
                 position.X = (float)Math.Round(position.X / ParamConst.ChunkSize);
                 position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);
                 position.Z = (float)Math.Round(position.Z / ParamConst.ChunkSize);

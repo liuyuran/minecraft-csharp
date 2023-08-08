@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using Base;
 using Base.Blocks;
 using Base.Components;
@@ -79,17 +78,17 @@ public class Tests {
         Assert.That(player, Is.Not.Null);
         if (player == null) return;
         Assert.Multiple(() => {
-            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(0, 0, 0)));
-            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(0, 0, 0)));
+            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(0, 0, 0).ToNumerics()));
+            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(0, 0, 0).ToNumerics()));
         });
         // 玩家移动，检查玩家位置
         SendEventToServer(new PlayerInfoUpdateEvent {
-            Position = new Vector3(1, 1, 1),
-            Forward = new Vector3(2, 2, 2)
+            Position = new Vector3(1, 1, 1).ToNumerics(),
+            Forward = new Vector3(2, 2, 2).ToNumerics()
         });
         Assert.Multiple(() => {
-            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1)));
-            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2)));
+            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1).ToNumerics()));
+            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2).ToNumerics()));
         });
         // 等待存档
         Thread.Sleep((int)(ParamConst.AutoSaveInterval + 1000));
@@ -100,8 +99,8 @@ public class Tests {
         Assert.That(player, Is.Not.Null);
         if (player == null) return;
         Assert.Multiple(() => {
-            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1)));
-            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2)));
+            Assert.That(player.GetComponent<Transform>().Position, Is.EqualTo(new Vector3(1, 1, 1).ToNumerics()));
+            Assert.That(player.GetComponent<Transform>().Forward, Is.EqualTo(new Vector3(2, 2, 2).ToNumerics()));
         });
         SendEventToServer(new PlayerLogoutEvent());
     }

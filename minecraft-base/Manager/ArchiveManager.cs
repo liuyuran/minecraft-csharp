@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using Base.Blocks;
@@ -125,12 +124,12 @@ namespace Base.Manager {
                     (float)(defaultData.SelectToken("position.x") ?? 0),
                     (float)(defaultData.SelectToken("position.y") ?? 0),
                     (float)(defaultData.SelectToken("position.z") ?? 0)
-                ),
+                ).ToNumerics(),
                 Forward = new Vector3(
                     (float)(defaultData.SelectToken("forward.x") ?? 0),
                     (float)(defaultData.SelectToken("forward.y") ?? 0),
                     (float)(defaultData.SelectToken("forward.z") ?? 0)
-                )
+                ).ToNumerics()
             });
             player.AddComponent(new World {
                 WorldId = (int)(defaultData.SelectToken("worldId") ?? 0)

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Base.Components;
 using Base.Const;
 using Base.Events.ServerEvent;
 using Base.Interface;
 using Base.Manager;
+using Base.Utils;
 
 namespace Base.Systems {
     /// <summary>
@@ -46,7 +46,7 @@ namespace Base.Systems {
                 var player = entity.GetComponent<Player>();
                 if (player.LastSyncTime + ParamConst.SyncInterval > DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     continue;
-                var position = entity.GetComponent<Transform>().Position + new Vector3();
+                var position = new Vector3(entity.GetComponent<Transform>().Position);
                 // 同步地图数据
                 UpdateChunkData(player, position, items);
                 // 重置计时器

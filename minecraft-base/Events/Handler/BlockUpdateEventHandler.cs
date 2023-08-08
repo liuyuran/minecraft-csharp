@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using Base.Blocks;
 using Base.Components;
 using Base.Const;
@@ -30,12 +29,12 @@ namespace Base.Events.Handler {
                         Meta = dropItem.Meta 
                     });
                     item.AddComponent(new Transform {
-                        Forward = Vector3.Zero,
+                        Forward = Vector3.Zero.ToNumerics(),
                         Position = new Vector3(
                             @event.ChunkPos.X * ParamConst.ChunkSize + @event.BlockPos.X,
                             @event.ChunkPos.Y * ParamConst.ChunkSize + @event.BlockPos.Y,
                             @event.ChunkPos.Z * ParamConst.ChunkSize + @event.BlockPos.Z
-                        )
+                        ).ToNumerics()
                     });
                     var chunk = ChunkManager.Instance.GetChunk(@event.WorldId, @event.ChunkPos);
                     if (chunk == null) continue;
