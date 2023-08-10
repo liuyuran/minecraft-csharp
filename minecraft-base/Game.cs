@@ -29,6 +29,10 @@ namespace Base {
         /// <param name="adapter">自定义适配器实例</param>
         // ReSharper disable once MemberCanBePrivate.Global
         public static void Start(string path, INetworkAdapter adapter) {
+            if (_isRunning) {
+                LogManager.Instance.Warning("服务器已经启动，无法重复启动");
+                return;
+            }
             _isRunning = true;
             LogManager.Instance.Info("服务器启动中，请稍等...");
             // 设定网络模式

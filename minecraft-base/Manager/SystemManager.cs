@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Base.Interface;
@@ -26,7 +27,12 @@ namespace Base.Manager {
             }
         }
 
-        private static void RegisterSystem(SystemBase systemBase) {
+        /// <summary>
+        /// 注册一个额外的System
+        /// </summary>
+        /// <param name="systemBase">系统实例</param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public static void RegisterSystem(SystemBase systemBase) {
             systemBase.OnCreate();
             Systems.Add(systemBase);
         }
