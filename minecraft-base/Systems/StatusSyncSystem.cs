@@ -66,7 +66,7 @@ namespace Base.Systems {
             position.Y = (float)Math.Round(position.Y / ParamConst.ChunkSize);
             position.Z = (float)Math.Round(position.Z / ParamConst.ChunkSize);
             for (var x = -ParamConst.DisplayDistance; x <= ParamConst.DisplayDistance; x++) {
-                for (var y = -ParamConst.DisplayDistance; y <= ParamConst.DisplayDistance; y++) {
+                for (var y = -ParamConst.DisplayDistanceY; y <= ParamConst.DisplayDistanceY; y++) {
                     for (var z = -ParamConst.DisplayDistance; z <= ParamConst.DisplayDistance; z++) {
                         var pos = position + new Vector3(x, y, z);
                         var chunk = ChunkManager.Instance.GetChunk(0, pos);
