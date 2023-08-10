@@ -84,7 +84,8 @@ namespace Base.Manager {
                 WorldId = (int)(jsonData.SelectToken("WorldId") ?? 0),
                 Position = jsonData.SelectToken("Position")?.ToObject<Vector3>() ?? Vector3.Zero,
                 Version = (long)(jsonData.SelectToken("Version") ?? 0),
-                IsEmpty = (bool)(jsonData.SelectToken("IsEmpty") ?? false)
+                IsEmpty = (bool)(jsonData.SelectToken("IsEmpty") ?? false),
+                HeightMap = jsonData.SelectToken("HeightMap")?.ToObject<int[]>() ?? new int[ParamConst.ChunkSize * ParamConst.ChunkSize]
             };
             return chunk;
         }
@@ -98,7 +99,8 @@ namespace Base.Manager {
                 ["WorldId"] = chunkData.WorldId,
                 ["Position"] = JToken.FromObject(chunkData.Position),
                 ["Version"] = chunkData.Version,
-                ["IsEmpty"] = chunkData.IsEmpty
+                ["IsEmpty"] = chunkData.IsEmpty,
+                ["HeightMap"] = JToken.FromObject(chunkData.HeightMap)
             };
             var filename = $"{path}/{IntToHex(pos.X)}_{IntToHex(pos.Y)}_{IntToHex(pos.Z)}.json";
             File.WriteAllText(filename, data.ToString());

@@ -20,6 +20,7 @@ namespace Base.Generators {
             };
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var y = 0; y < ParamConst.ChunkSize; y++) {
+                    chunk.HeightMap[x * ParamConst.ChunkSize + y] = ParamConst.ChunkSize;
                     for (var z = 0; z < ParamConst.ChunkSize; z++) {
                         chunk.SetBlock(x, y, z, new Dirt());
                     }
@@ -51,6 +52,7 @@ namespace Base.Generators {
                     noise += 5;
                     noise /= 6;
                     var target = Math.Floor(noise * ParamConst.ChunkSize);
+                    chunk.HeightMap[x * ParamConst.ChunkSize + z] = (int)target;
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
                         if (y < target) 
                             chunk.SetBlock(x, y, z, new Dirt());
@@ -79,6 +81,7 @@ namespace Base.Generators {
             };
             for (var x = 0; x < ParamConst.ChunkSize; x++) {
                 for (var z = 0; z < ParamConst.ChunkSize; z++) {
+                    chunk.HeightMap[x * ParamConst.ChunkSize + z] = 0;
                     for (var y = 0; y < ParamConst.ChunkSize; y++) {
                         chunk.SetBlock(x, y, z, new Air());
                     }

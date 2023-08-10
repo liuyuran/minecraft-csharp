@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using Base.Blocks;
 using Base.Const;
 using Base.Manager;
-using ProtoBuf;
 
 namespace Base.Utils {
+    [Serializable]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public sealed class Chunk {
         // 六个面的可见性掩码
@@ -22,6 +21,8 @@ namespace Base.Utils {
         public int WorldId;
         public Vector3 Position;
         public bool IsEmpty;
+        // 露天高度图，可以用于生成树等方块
+        public int [] HeightMap = new int[ParamConst.ChunkSize * ParamConst.ChunkSize];
 
         public Block GetBlock(int x, int y, int z) {
             return BlockData[x * ParamConst.ChunkSize * ParamConst.ChunkSize + y * ParamConst.ChunkSize + z];
@@ -66,7 +67,7 @@ namespace Base.Utils {
                     left.RenderFlags &= ~Right;
                 }
                 var up = GetBlockCrossChunk(x, y + 1, z);
-                if (up is { Transparent: false }l) {
+                if (up is { Transparent: false }) {
                     up.RenderFlags &= ~Down;
                 }
                 var right = GetBlockCrossChunk(x + 1, y, z);
